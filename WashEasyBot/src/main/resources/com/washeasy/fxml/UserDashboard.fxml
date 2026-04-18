@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="rootPane" prefHeight="600" prefWidth="760" styleClass="root-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.washeasy.controller.UserDashboardController">
+
+
+    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="navbar">
+        <padding><Insets bottom="0" left="20" right="20" top="0" /></padding>
+        <Label prefHeight="67.0" prefWidth="77.0" style="-fx-font-size:22px;" />
+      <ImageView fitHeight="82.0" fitWidth="124.0">
+         <image>
+            <Image url="@../images/logo.png" />
+         </image>
+      </ImageView>
+        <VBox spacing="0">
+            <Label styleClass="nav-brand" text="WashEasy" />
+            <Label styleClass="nav-sub" text="LAUNDRY CHATBOT" />
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="lblUsername" styleClass="nav-user" text="User" />
+        <Button onAction="#handleLogout" styleClass="btn-logout" text="Logout" />
+    </HBox>
+
+
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="chat-header">
+        <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
+        <Label style="-fx-font-size:28px;" text="🤖" />
+        <VBox spacing="2">
+            <Label styleClass="chat-bot-name" text="WashEasy Bot" />
+            <HBox alignment="CENTER_LEFT" spacing="4">
+                <Label style="-fx-text-fill:#10B981;-fx-font-size:8px;" text="●" />
+                <Label style="-fx-text-fill:#10B981;-fx-font-size:12px;-fx-font-weight:600;" text="Online" />
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- ══ QUICK REPLY BUTTONS ══ -->
+    <HBox spacing="8" styleClass="quick-reply-bar">
+        <padding><Insets bottom="10" left="20" right="20" top="10" /></padding>
+        <Button onAction="#handleQrLayanan" styleClass="qr-btn" text="📋 Layanan" />
+        <Button onAction="#handleQrHarga" styleClass="qr-btn" text="💰 Harga" />
+        <Button onAction="#handleQrJam" styleClass="qr-btn" text="🕐 Jam Buka" />
+        <Button onAction="#handleQrLokasi" styleClass="qr-btn" text="📍 Lokasi" />
+    </HBox>
+
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="chat-scroll" VBox.vgrow="ALWAYS">
+        <VBox fx:id="vboxMessages" spacing="8" styleClass="chat-messages">
+            <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
+        </VBox>
+    </ScrollPane>
+
+
+    <HBox alignment="CENTER" spacing="10" styleClass="chat-input-area">
+        <padding><Insets bottom="12" left="16" right="16" top="12" /></padding>
+        <TextField fx:id="txtInput" promptText="Tanyakan sesuatu..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnKirim" onAction="#handleKirim" styleClass="btn-send" text="▶" />
+    </HBox>
+
+</VBox>

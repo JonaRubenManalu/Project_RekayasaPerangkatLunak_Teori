@@ -1,0 +1,365 @@
+/* ═══════════════════════════════════════════════════════════════
+   style.css — WashEasy Bot
+   JavaFX CSS Stylesheet
+   Berlaku untuk semua scene: Login, AdminDashboard, UserDashboard
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Root & Reset ─────────────────────────────────────────────── */
+.root-pane {
+    -fx-background-color: #F8FAFC;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+/* ── NAVBAR ───────────────────────────────────────────────────── */
+.navbar {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 56px;
+    -fx-pref-height: 56px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);
+}
+.nav-brand {
+    -fx-text-fill: #2563EB;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+.nav-sub {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 9px;
+    -fx-font-weight: 600;
+}
+.nav-user {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 0 8 0 0;
+}
+.btn-logout {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8px;
+    -fx-padding: 7 16 7 16;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-logout:hover { -fx-background-color: #FECACA; }
+
+/* ── HERO BANNER ──────────────────────────────────────────────── */
+.hero-banner {
+    -fx-background-color: linear-gradient(to right, #2563EB, #0EA5E9);
+    -fx-min-height: 72px;
+}
+.hero-title {
+    -fx-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.hero-sub-text {
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 12px;
+}
+
+/* ── STAT CARDS ───────────────────────────────────────────────── */
+.stat-card {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 14 18 14 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 1);
+}
+.stat-label {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+.stat-value {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/* ── SECTION TITLE ────────────────────────────────────────────── */
+.section-title {
+    -fx-text-fill: #334155;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* ── DATA TABLE ───────────────────────────────────────────────── */
+.data-table {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+.data-table .column-header {
+    -fx-background-color: #F8FAFC;
+    -fx-text-fill: #64748B;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+.data-table .table-row-cell:hover {
+    -fx-background-color: #EFF6FF;
+}
+.data-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1E40AF;
+}
+
+/* ── FORM CARD (Admin) ────────────────────────────────────────── */
+.form-card {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
+}
+.form-card-title {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 4 0;
+}
+
+/* ── INPUTS (Form) ────────────────────────────────────────────── */
+.input-label {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+.form-input {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12 8 12;
+}
+.form-input:focused {
+    -fx-border-color: #2563EB;
+    -fx-background-color: white;
+}
+.status-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #334155;
+}
+
+/* ── BUTTONS ──────────────────────────────────────────────────── */
+.btn-primary {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 9px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-primary:hover { -fx-background-color: #1D4ED8; }
+
+.btn-secondary {
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 9px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-secondary:hover { -fx-background-color: #E2E8F0; }
+
+.btn-danger {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 9px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-danger:hover { -fx-background-color: #FECACA; }
+
+/* ── LOGIN PAGE ───────────────────────────────────────────────── */
+.login-form-side {
+    -fx-background-color: white;
+}
+.login-hero {
+    -fx-background-color: linear-gradient(145deg, #2563EB, #0EA5E9);
+}
+.brand-title {
+    -fx-text-fill: #2563EB;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+.brand-sub {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 12px;
+}
+.form-heading {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+.text-muted {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 13px;
+}
+.link-label {
+    -fx-text-fill: #2563EB;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+.input-wrap {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.input-icon {
+    -fx-font-size: 14px;
+    -fx-padding: 9 6 9 12;
+}
+.login-input {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 14px;
+    -fx-padding: 9 12 9 4;
+}
+.login-input:focused {
+    -fx-background-color: transparent;
+}
+.btn-login {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 0 12 0;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-login:hover { -fx-background-color: #1D4ED8; }
+.error-label {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+.hint-text {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+    -fx-text-alignment: center;
+}
+.hero-brand {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+.hero-sub {
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 2px;
+}
+.hero-desc {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 13px;
+    -fx-text-alignment: center;
+    -fx-line-spacing: 4px;
+}
+
+/* ── CHATBOT PAGE ─────────────────────────────────────────────── */
+.chat-header {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 0 0 1 0;
+}
+.chat-bot-name {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+.quick-reply-bar {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 0 0 1 0;
+}
+.qr-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #2563EB;
+    -fx-border-color: #2563EB;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 5 14 5 14;
+    -fx-cursor: hand;
+}
+.qr-btn:hover {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+.chat-scroll {
+    -fx-background: #F8FAFC;
+    -fx-background-color: #F8FAFC;
+    -fx-border-width: 0;
+}
+.chat-scroll > .viewport {
+    -fx-background-color: #F8FAFC;
+}
+.chat-messages {
+    -fx-background-color: #F8FAFC;
+}
+.chat-input-area {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1 0 0 0;
+}
+.chat-input {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16 10 16;
+}
+.chat-input:focused {
+    -fx-border-color: #2563EB;
+    -fx-background-color: white;
+}
+.btn-send {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12px;
+    -fx-min-width: 42px;
+    -fx-min-height: 42px;
+    -fx-max-width: 42px;
+    -fx-max-height: 42px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+.btn-send:hover { -fx-background-color: #1D4ED8; }
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 4px;
+}
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+

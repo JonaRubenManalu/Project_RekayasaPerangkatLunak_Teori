@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="rootPane" prefHeight="520" prefWidth="860" styleClass="root-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.washeasy.controller.LoginController">
+
+
+    <VBox prefHeight="520" prefWidth="430" spacing="0" styleClass="login-form-side">
+        <padding><Insets bottom="48" left="48" right="48" top="48" /></padding>
+
+
+        <Label styleClass="brand-title" text="WashEasy" />
+        <Label style="-fx-padding:0 0 28 0;" styleClass="brand-sub" text="Laundry Chatbot System" />
+
+
+        <Label styleClass="form-heading" text="Get's Started" />
+        <HBox spacing="4" style="-fx-padding:2 0 22 0;">
+            <Label styleClass="text-muted" text="Don't have Account?" />
+            <Label styleClass="link-label" text="Sign Up" />
+        </HBox>
+
+
+        <Label styleClass="input-label" text="USERNAME" />
+        <HBox spacing="0" style="-fx-padding:0 0 14 0;" styleClass="input-wrap">
+            <Label prefHeight="39.0" prefWidth="51.0" styleClass="input-icon" text="👤" textAlignment="CENTER" />
+            <TextField fx:id="txtUsername" maxWidth="Infinity" prefHeight="38.0" prefWidth="282.0" promptText="Insert Username" styleClass="login-input" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+
+        <Label styleClass="input-label" text="PASSWORD" />
+        <HBox prefHeight="51.0" prefWidth="334.0" spacing="0" style="-fx-padding:0 0 20 0;" styleClass="input-wrap">
+            <Label prefHeight="45.0" prefWidth="50.0" styleClass="input-icon" text="🔒" />
+            <PasswordField fx:id="txtPassword" maxWidth="Infinity" prefHeight="31.0" prefWidth="283.0" promptText="Insert Password" styleClass="login-input" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+
+        <Label fx:id="lblError" style="-fx-padding:0 0 8 0;" styleClass="error-label" text="" wrapText="true" />
+
+
+        <Button fx:id="btnLogin" maxWidth="Infinity" onAction="#handleLogin" styleClass="btn-login" text="Login" />
+
+
+        <Label style="-fx-padding:12 0 0 0;" styleClass="hint-text" text="Demo: admin/admin123  |  user/user123" />
+    </VBox>
+
+
+    <VBox alignment="CENTER" prefHeight="520" prefWidth="430" spacing="8" style="-fx-background-color: add8e6;" styleClass="login-hero">
+      <ImageView fitHeight="109.0" fitWidth="200.0">
+         <image>
+            <Image url="@../images/logo.png" />
+         </image>
+      </ImageView>
+      <Label text="WashEasy" />
+      <Label text="LAUNDRY CHATBOT" />
+      <Label contentDisplay="CENTER" prefHeight="98.0" prefWidth="166.0" text="Asisten cerdas untuk layanan &#10;laundry Anda. Tanyakan harga,&#10;jenis layanan, dan info lainnya." textAlignment="JUSTIFY">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Label>
+    </VBox>
+
+</HBox>
