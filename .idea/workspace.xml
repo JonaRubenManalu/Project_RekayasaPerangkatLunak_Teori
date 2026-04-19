@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="" />
+    <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/LoginController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ServiceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ServiceController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/UserDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/UserDashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/database/DatabaseManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/database/DatabaseManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/Service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/util/SceneManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/util/SceneManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/module-info.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,9 +29,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="3CZoCIGzFAHRpjcVWKEdyqyYB1k" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -23,6 +39,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -30,7 +47,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/71241126_RPL/JonaRubenManalu-Project_RekayasaPerangkatLunak_Teori",
+    "last_opened_file_path": "D:/prrpll/JonaRubenManalu-Project_RekayasaPerangkatLunak_Teori",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -39,7 +56,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
       </set>
     </attachedChunks>
   </component>
