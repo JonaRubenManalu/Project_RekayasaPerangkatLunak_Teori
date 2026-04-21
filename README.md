@@ -88,12 +88,12 @@ Database `washeasy.db` akan otomatis dibuat di direktori project saat pertama ka
 
 
 ## Teknologi
-- **Java 17** — Bahasa pemrograman utama
-- **JavaFX 17** — Framework GUI desktop
-- **FXML + SceneBuilder** — Desain layout antarmuka
-- **SQLite** — Database lokal (file `washeasy.db`)
-- **JDBC** — Koneksi Java ke SQLite
-- **Maven** — Build tool dan dependency management
+- **Java 17** = Bahasa pemrograman utama
+- **JavaFX 17** = Framework GUI desktop
+- **FXML + SceneBuilder** = Desain layout antarmuka
+- **SQLite** = Database lokal (file `washeasy.db`)
+- **JDBC** = Koneksi Java ke SQLite
+- **Maven** = Build tool dan dependency management
 
 
 
