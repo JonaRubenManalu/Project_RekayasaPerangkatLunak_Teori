@@ -112,7 +112,7 @@ public class ChatbotEngine {
             sb.append(String.format("%-20s | %-18s | %s%n",
                     s.getNamaLayanan(), s.getFormattedHarga(), s.getEstimasiWaktu()));
         }
-        sb.append("\nMinimal laundry 3 kg. Jika kurang, dikenakan harga minimum Rp 21.000.");
+        sb.append("\nMinimal laundry 1 kg. Jika kurang, dikenakan harga minimum Rp 21.000.");
         return sb.toString();
     }
 
@@ -127,7 +127,7 @@ public class ChatbotEngine {
                 if (w.length() > 3 && low.contains(w)) {
                     return String.format(
                             "Harga %s adalah %s\nEstimasi pengerjaan: %s\n\n" +
-                                    "Info tambahan:\n• Minimal laundry 3 kg\n• Jika kurang dari 3 kg, harga minimum Rp 21.000",
+                                    "Info tambahan:\n• Minimal laundry 1 kg\n• Jika kurang dari 1 kg, harga minimum Rp 21.000",
                             s.getNamaLayanan(), s.getFormattedHarga(), s.getEstimasiWaktu()
                     );
                 }
@@ -138,7 +138,7 @@ public class ChatbotEngine {
         for (Service s : all) {
             sb.append(String.format("• %-20s : %s%n", s.getNamaLayanan(), s.getFormattedHarga()));
         }
-        sb.append("\nMinimal laundry reguler 3 kg → harga minimum Rp 21.000.");
+        sb.append("\nMinimal laundry reguler 1 kg → harga minimum Rp 21.000.");
         return sb.toString();
     }
 
@@ -193,10 +193,10 @@ public class ChatbotEngine {
     private String handleMinimal() {
         unrecognizedCount = 0;
         return """
-            Minimal laundry adalah 3 kg.
+            Minimal laundry adalah 1 kg.
             
-            Jika pakaian Anda kurang dari 3 kg, akan tetap dikenakan
-            harga minimum sebesar Rp 21.000 (setara 3 kg reguler).
+            Jika pakaian Anda kurang dari 1 kg, akan tetap dikenakan
+            harga minimum sebesar Rp 21.000 (setara 1 kg reguler).
             
             Untuk layanan Express dan Kilat, kebijakan minimal sama.
             """;

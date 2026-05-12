@@ -90,12 +90,10 @@ public class ChatbotController {
         String low = input.toLowerCase();
 
         if (containsAny(low, TRIGGER_PESAN.toArray(String[]::new))) {
-            // Mulai alur pemesanan
             currentStep = Step.PILIH_LAYANAN;
             return buildLayananMenu();
         }
 
-        // Bukan trigger pesan → teruskan ke engine biasa
         return engine.processInput(input);
     }
 
@@ -104,7 +102,6 @@ public class ChatbotController {
         ObservableList<Service> services = serviceController.getAllServices();
         String low = input.toLowerCase();
 
-        // Cari layanan yang namanya paling cocok dengan input
         Service match = null;
         for (Service s : services) {
             if (low.contains(s.getNamaLayanan().toLowerCase())
@@ -112,7 +109,6 @@ public class ChatbotController {
                 match = s;
                 break;
             }
-            // Cek kata kunci parsial (misal "reguler", "express", "kilat")
             for (String word : s.getNamaLayanan().toLowerCase().split(" ")) {
                 if (word.length() > 3 && low.contains(word)) {
                     match = s;
@@ -135,51 +131,59 @@ public class ChatbotController {
                     + buildLayananMenu();
         }
 
-        // Simpan pilihan & lanjut ke step berat
         selectedLayanan = match.getNamaLayanan();
         selectedHarga   = match.getHarga();
         selectedSatuan  = match.getSatuanHarga();
         currentStep     = Step.INPUT_BERAT;
 
         String satuanPrompt = selectedSatuan.equals("kg")
-                ? "Berapa kg cucian Anda? (Minimal 3 kg)"
+                ? "Berapa kg cucian Anda? (Minimal 1 kg)"
                 : "Berapa " + selectedSatuan + " yang ingin Anda laundry?";
 
         return String.format(
                 "✅ Anda memilih: *%s*\n" +
-                "💰 Harga: Rp %,.0f / %s\n\n" +
-                "📦 %s\n" +
-                "(Ketik angka, contoh: 3 atau 5.5)\n\n" +
-                "Ketik 'batal' untuk membatalkan.",
+                        "💰 Harga: Rp %,.0f / %s\n\n" +
+                        "📦 %s\n" +
+                        "(Ketik angka, contoh: 3 atau 5.5)\n\n" +
+                        "Ketik 'batal' untuk membatalkan.",
                 selectedLayanan, selectedHarga, selectedSatuan, satuanPrompt
         );
     }
 
     // ── Step 2: INPUT_BERAT — user memasukkan berat/jumlah ──────
     private String handleInputBerat(String input, String username) {
+        String trimmedInput = input.trim();
         double berat;
+
         try {
-            // Hapus satuan jika ada ("3 kg" → "3", "2 pcs" → "2")
-            String angka = input.trim().replaceAll("[^0-9.]", "").trim();
+            // Cek dulu apakah input mengandung angka negatif (misal: -1, -0.5)
+            // sebelum di-strip karakter non-angka
+            String angka = trimmedInput.replaceAll("[^0-9.]", "").trim();
+            if (angka.isEmpty()) throw new NumberFormatException("kosong");
             berat = Double.parseDouble(angka);
+
+            // Jika input aslinya mengandung tanda minus → negatif
+            if (trimmedInput.startsWith("-")) berat = -berat;
+
         } catch (NumberFormatException e) {
-            return "⚠ Masukkan angka yang valid. Contoh: 3 atau 5.5";
+            return "⚠️ Input tidak valid. Masukkan angka positif.\n" +
+                    "Contoh: 1 atau 2.5";
         }
 
+        // Validasi: angka negatif atau nol
         if (berat <= 0) {
-            return "⚠ Jumlah harus lebih dari 0.";
+            return "⚠️ Berat tidak valid! Anda memasukkan: \"" + trimmedInput + "\"\n\n" +
+                    "Berat harus berupa angka positif.\n" +
+                    "Silakan masukkan ulang (contoh: 1 atau 2.5)";
         }
 
-        // Terapkan minimal 3 kg untuk layanan satuan kg
-        if (selectedSatuan.equals("kg") && berat < 3) {
-            berat = 3;
-            inputBerat = berat;
-            totalHarga = selectedHarga * berat;
-            currentStep = Step.KONFIRMASI;
-            return String.format(
-                    "ℹ️ Minimal laundry 3 kg. Berat diset ke 3 kg.\n\n" +
-                    buildKonfirmasiMessage(), totalHarga
-            );
+        // Validasi minimal 1 kg — tampilkan warning, TIDAK otomatis diubah
+        if (selectedSatuan.equals("kg") && berat < 1) {
+            return "⚠️ Minimal pemesanan adalah 1 kg!\n\n" +
+                    "Anda memasukkan " + trimmedInput + " kg yang tidak memenuhi " +
+                    "syarat minimum.\n\n" +
+                    "Silakan masukkan berat minimal 1 kg:\n" +
+                    "(Contoh: 1 atau 1.5)";
         }
 
         inputBerat = berat;
@@ -194,20 +198,19 @@ public class ChatbotController {
         String low = input.toLowerCase();
 
         if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi")) {
-            // Simpan ke tabel history
             boolean saved = saveOrder(username);
             resetFlow();
 
             if (saved) {
                 return String.format(
                         "✅ Pesanan berhasil dibuat!\n\n" +
-                        "📋 Detail Pesanan:\n" +
-                        "   Layanan   : %s\n" +
-                        "   Jumlah    : %.1f %s\n" +
-                        "   Total     : Rp %,.0f\n" +
-                        "   Status    : Sedang Diproses 🔄\n\n" +
-                        "Anda dapat memantau status pesanan di menu 'Tracking Pesanan'.\n" +
-                        "Terima kasih! 😊",
+                                "📋 Detail Pesanan:\n" +
+                                "   Layanan   : %s\n" +
+                                "   Jumlah    : %.1f %s\n" +
+                                "   Total     : Rp %,.0f\n" +
+                                "   Status    : Sedang Diproses 🔄\n\n" +
+                                "Anda dapat memantau status pesanan di menu 'Tracking Pesanan'.\n" +
+                                "Terima kasih! 😊",
                         selectedLayanan, inputBerat, selectedSatuan, totalHarga
                 );
             } else {
@@ -228,7 +231,7 @@ public class ChatbotController {
         try {
             int rows = db.preparedExecute(
                     "INSERT INTO history(username, nama_layanan, berat_kg, total_harga, status) " +
-                    "VALUES(?, ?, ?, ?, 'Sedang Diproses')",
+                            "VALUES(?, ?, ?, ?, 'Sedang Diproses')",
                     username, selectedLayanan, inputBerat, totalHarga
             );
             return rows > 0;
@@ -243,7 +246,7 @@ public class ChatbotController {
         ObservableList<Service> services = serviceController.getAllServices();
         StringBuilder sb = new StringBuilder(
                 "🧺 *Alur Pemesanan Laundry*\n\n" +
-                "Pilih layanan yang Anda inginkan:\n\n"
+                        "Pilih layanan yang Anda inginkan:\n\n"
         );
         int i = 1;
         for (Service s : services) {
@@ -258,12 +261,12 @@ public class ChatbotController {
     private String buildKonfirmasiMessage() {
         return String.format(
                 "📋 *Ringkasan Pesanan:*\n\n" +
-                "   Layanan   : %s\n" +
-                "   Jumlah    : %.1f %s\n" +
-                "   Harga     : Rp %,.0f / %s\n" +
-                "   ───────────────────\n" +
-                "   Total     : Rp %,.0f\n\n" +
-                "Ketik 'Ya' untuk konfirmasi atau 'Tidak' untuk batal.",
+                        "   Layanan   : %s\n" +
+                        "   Jumlah    : %.1f %s\n" +
+                        "   Harga     : Rp %,.0f / %s\n" +
+                        "   ───────────────────\n" +
+                        "   Total     : Rp %,.0f\n\n" +
+                        "Ketik 'Ya' untuk konfirmasi atau 'Tidak' untuk batal.",
                 selectedLayanan, inputBerat, selectedSatuan,
                 selectedHarga, selectedSatuan,
                 totalHarga

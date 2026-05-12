@@ -59,25 +59,25 @@
 
 
     <VBox alignment="CENTER" prefHeight="520" prefWidth="430" spacing="8" style="-fx-background-color: add8e6;" styleClass="login-hero">
-      <ImageView fitHeight="109.0" fitWidth="200.0">
-         <image>
-            <Image url="@../images/logo.png" />
-         </image>
-      </ImageView>
-      <Label text="WashEasy" />
-      <Label text="LAUNDRY CHATBOT" />
-      <Label contentDisplay="CENTER" prefHeight="98.0" prefWidth="166.0" text="Asisten cerdas untuk layanan &#10;laundry Anda. Tanyakan harga,&#10;jenis layanan, dan info lainnya." textAlignment="JUSTIFY">
-         <effect>
-            <Lighting>
-               <bumpInput>
-                  <Shadow />
-               </bumpInput>
-               <light>
-                  <Light.Distant />
-               </light>
-            </Lighting>
-         </effect>
-      </Label>
+        <ImageView fitHeight="109.0" fitWidth="200.0">
+            <image>
+                <Image url="@../images/logo.png" />
+            </image>
+        </ImageView>
+        <Label text="WashEasy" />
+        <Label text="LAUNDRY CHATBOT" />
+        <Label contentDisplay="CENTER" prefHeight="98.0" prefWidth="166.0" text="Asisten cerdas untuk layanan &#10;laundry Anda. Tanyakan harga,&#10;jenis layanan, dan info lainnya." textAlignment="JUSTIFY">
+            <effect>
+                <Lighting>
+                    <bumpInput>
+                        <Shadow />
+                    </bumpInput>
+                    <light>
+                        <Light.Distant />
+                    </light>
+                </Lighting>
+            </effect>
+        </Label>
     </VBox>
 
 </HBox>
