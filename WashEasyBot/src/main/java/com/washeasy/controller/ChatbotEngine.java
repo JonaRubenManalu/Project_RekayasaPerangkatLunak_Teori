@@ -26,10 +26,7 @@ public class ChatbotEngine {
         this.db                = DatabaseManager.getInstance();
     }
 
-    /**
-     * Titik masuk utama: terima input → kembalikan respons teks.
-     * Waktu respons dijaga < 2 detik (non-fungsional).
-     */
+
     public String processInput(String input) {
         long start = System.currentTimeMillis();
         if (input == null || input.isBlank()) return "Silakan ketik pertanyaan Anda.";
