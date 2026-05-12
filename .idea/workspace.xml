@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/SignUpController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/SignUp.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/SignUpController.jav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/Login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/Login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/SignUp.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/SignUp.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/washeasy.db" beforeDir="false" afterPath="$PROJECT_DIR$/washeasy.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

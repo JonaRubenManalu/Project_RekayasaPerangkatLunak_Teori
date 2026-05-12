@@ -62,7 +62,7 @@
         <Button maxWidth="Infinity" onAction="#handleSignUp" styleClass="btn-login" text="Daftar" />
 
         <Label style="-fx-padding:12 0 0 0;" styleClass="hint-text"
-               text="Akun baru akan terdaftar sebagai pengguna biasa." />
+               text="Akun baru akan terdaftar sebagai costomer." />
     </VBox>
 
     <!-- ══ HERO SIDE ══ -->
