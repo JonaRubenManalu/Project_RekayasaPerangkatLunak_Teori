@@ -1,18 +1,25 @@
 package com.washeasy.controller;
 
+import com.washeasy.database.DatabaseManager;
+import com.washeasy.model.OrderHistory;
 import com.washeasy.model.User;
 import com.washeasy.util.SceneManager;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,8 +37,20 @@ public class UserDashboardController {
     @FXML private Button     btnKirim;
     @FXML private Pane       rootPane;
 
-    private final ChatbotEngine chatbot = new ChatbotEngine();
+    // [MODIFIED] Diganti dengan ChatbotController yang mendukung alur pemesanan step-by-step
+    private final ChatbotController chatbotController = new ChatbotController();
     private User currentUser;
+
+    // [ADDED] Field untuk tab Tracking Pesanan
+    @FXML private TableView<OrderHistory>               tblTracking;
+    @FXML private TableColumn<OrderHistory, Integer>    colTrId;
+    @FXML private TableColumn<OrderHistory, String>     colTrLayanan;
+    @FXML private TableColumn<OrderHistory, Double>     colTrBerat;
+    @FXML private TableColumn<OrderHistory, Double>     colTrTotal;
+    @FXML private TableColumn<OrderHistory, String>     colTrStatus;
+    @FXML private TableColumn<OrderHistory, String>     colTrTanggal;
+
+    private final DatabaseManager db = DatabaseManager.getInstance();
 
     private static final DateTimeFormatter TIME_FMT =
             DateTimeFormatter.ofPattern("HH:mm");
@@ -40,6 +59,7 @@ public class UserDashboardController {
     public void initialize() {
         // Enter key untuk kirim
         txtInput.setOnAction(e -> handleKirim());
+        setupTrackingTable(); // [ADDED] inisialisasi kolom tabel tracking
 
         // Auto-scroll ke bawah saat ada pesan baru
         vboxMessages.heightProperty().addListener((obs, old, nv) ->
@@ -62,6 +82,7 @@ public class UserDashboardController {
                         "• \"jam buka\"\n" +
                         "• \"lokasi\""
         ));
+        Platform.runLater(this::refreshTrackingTable); // [ADDED] load pesanan saat login
     }
 
     /** Tombol Kirim / Enter */
@@ -79,7 +100,12 @@ public class UserDashboardController {
         // Proses chatbot di thread terpisah agar UI tidak freeze
         new Thread(() -> {
             try { Thread.sleep(400); } catch (InterruptedException ignored) {}
-            String response = chatbot.processInput(input);
+            // [MODIFIED] Gunakan ChatbotController untuk step-by-step ordering
+            String response = chatbotController.processInput(input, currentUser.getUsername());
+            // Auto-refresh tracking setelah order selesai
+            if (!chatbotController.isOrdering()) {
+                Platform.runLater(UserDashboardController.this::refreshTrackingTable);
+            }
             Platform.runLater(() -> {
                 addBotMessage(response);
                 txtInput.setDisable(false);
@@ -98,9 +124,85 @@ public class UserDashboardController {
     /** Tombol Lokasi (quick reply) */
     @FXML public void handleQrLokasi() { sendPreset("Lokasi laundry di mana?"); }
 
+    // [ADDED] Quick reply untuk trigger alur pemesanan
+    @FXML public void handleQrPesan() { sendPreset("pesan laundry sekarang"); }
+
     private void sendPreset(String text) {
         txtInput.setText(text);
         handleKirim();
+    }
+
+    // ── [ADDED] Fitur Tracking Pesanan ───────────────────────────────────────
+
+    /** Setup kolom TableView tracking pesanan */
+    private void setupTrackingTable() {
+        if (tblTracking == null) return;
+        colTrId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colTrLayanan.setCellValueFactory(new PropertyValueFactory<>("namaLayanan"));
+
+        colTrBerat.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("%.1f kg", item));
+            }
+        });
+        colTrBerat.setCellValueFactory(new PropertyValueFactory<>("beratKg"));
+
+        colTrTotal.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("Rp %,.0f", item));
+            }
+        });
+        colTrTotal.setCellValueFactory(new PropertyValueFactory<>("totalHarga"));
+
+        colTrStatus.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                if ("Siap Diambil".equals(item)) {
+                    setStyle("-fx-text-fill:#10B981;-fx-font-weight:bold;");
+                } else {
+                    setStyle("-fx-text-fill:#F59E0B;-fx-font-weight:bold;");
+                }
+            }
+        });
+        colTrStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colTrTanggal.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+    }
+
+    /** Load data pesanan milik user yang sedang login dari tabel history */
+    public void refreshTrackingTable() {
+        if (tblTracking == null || currentUser == null) return;
+        ObservableList<OrderHistory> list = FXCollections.observableArrayList();
+        try {
+            ResultSet rs = db.preparedQuery(
+                "SELECT id, username, nama_layanan, berat_kg, total_harga, status, created_at " +
+                "FROM history WHERE username = ? ORDER BY created_at DESC",
+                currentUser.getUsername()
+            );
+            while (rs.next()) {
+                list.add(new OrderHistory(
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("nama_layanan"),
+                    rs.getDouble("berat_kg"),
+                    rs.getDouble("total_harga"),
+                    rs.getString("status"),
+                    rs.getString("created_at")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("[UserDashboard] Gagal load tracking: " + e.getMessage());
+        }
+        tblTracking.setItems(list);
+    }
+
+    /** Tombol Refresh di tab Tracking */
+    @FXML
+    public void handleRefreshTracking() {
+        refreshTrackingTable();
     }
 
     /** Tombol Logout */

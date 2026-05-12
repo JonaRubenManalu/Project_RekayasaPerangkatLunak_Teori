@@ -4,6 +4,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,60 +15,125 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootPane" prefHeight="600" prefWidth="760" styleClass="root-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.washeasy.controller.UserDashboardController">
+<!--
+  UserDashboard.fxml — versi diperbarui dengan TabPane
+  Letakkan di: src/main/resources/com/washeasy/fxml/UserDashboard.fxml
+  (GANTIKAN file yang lama)
 
+  Perubahan:
+  - Konten utama dibungkus TabPane (2 tab: Chatbot + Tracking Pesanan)
+  - Tambah quick reply button "🛒 Pesan" untuk trigger alur ordering
+-->
+<VBox fx:id="rootPane" prefHeight="640" prefWidth="860" styleClass="root-pane"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.washeasy.controller.UserDashboardController">
 
+    <!-- ══ NAVBAR ══ -->
     <HBox alignment="CENTER_LEFT" spacing="8" styleClass="navbar">
         <padding><Insets bottom="0" left="20" right="20" top="0" /></padding>
         <Label prefHeight="67.0" prefWidth="77.0" style="-fx-font-size:22px;" />
-      <ImageView fitHeight="82.0" fitWidth="124.0">
-         <image>
-            <Image url="@../images/logo.png" />
-         </image>
-      </ImageView>
+        <ImageView fitHeight="82.0" fitWidth="124.0">
+            <image><Image url="@../images/logo.png" /></image>
+        </ImageView>
         <VBox spacing="0">
             <Label styleClass="nav-brand" text="WashEasy" />
-            <Label styleClass="nav-sub" text="LAUNDRY CHATBOT" />
+            <Label styleClass="nav-sub"   text="LAUNDRY CHATBOT" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="lblUsername" styleClass="nav-user" text="User" />
         <Button onAction="#handleLogout" styleClass="btn-logout" text="Logout" />
     </HBox>
 
+    <!-- ══ TAB PANE ══ -->
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE"
+             style="-fx-background-color:transparent;">
 
-    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="chat-header">
-        <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
-        <Label style="-fx-font-size:28px;" text="🤖" />
-        <VBox spacing="2">
-            <Label styleClass="chat-bot-name" text="WashEasy Bot" />
-            <HBox alignment="CENTER_LEFT" spacing="4">
-                <Label style="-fx-text-fill:#10B981;-fx-font-size:8px;" text="●" />
-                <Label style="-fx-text-fill:#10B981;-fx-font-size:12px;-fx-font-weight:600;" text="Online" />
-            </HBox>
-        </VBox>
-    </HBox>
+        <!-- ════ TAB 1: CHATBOT ════ -->
+        <Tab text="🤖 Chatbot">
+            <VBox>
+                <!-- Bot header -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="chat-header">
+                    <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
+                    <Label style="-fx-font-size:28px;" text="🤖" />
+                    <VBox spacing="2">
+                        <Label styleClass="chat-bot-name" text="WashEasy Bot" />
+                        <HBox alignment="CENTER_LEFT" spacing="4">
+                            <Label style="-fx-text-fill:#10B981;-fx-font-size:8px;" text="●" />
+                            <Label style="-fx-text-fill:#10B981;-fx-font-size:12px;-fx-font-weight:600;"
+                                   text="Online" />
+                        </HBox>
+                    </VBox>
+                </HBox>
 
-    <!-- ══ QUICK REPLY BUTTONS ══ -->
-    <HBox spacing="8" styleClass="quick-reply-bar">
-        <padding><Insets bottom="10" left="20" right="20" top="10" /></padding>
-        <Button onAction="#handleQrLayanan" styleClass="qr-btn" text="📋 Layanan" />
-        <Button onAction="#handleQrHarga" styleClass="qr-btn" text="💰 Harga" />
-        <Button onAction="#handleQrJam" styleClass="qr-btn" text="🕐 Jam Buka" />
-        <Button onAction="#handleQrLokasi" styleClass="qr-btn" text="📍 Lokasi" />
-    </HBox>
+                <!-- Quick reply -->
+                <HBox spacing="8" styleClass="quick-reply-bar">
+                    <padding><Insets bottom="10" left="20" right="20" top="10" /></padding>
+                    <Button onAction="#handleQrLayanan"  styleClass="qr-btn" text="📋 Layanan" />
+                    <Button onAction="#handleQrHarga"    styleClass="qr-btn" text="💰 Harga" />
+                    <Button onAction="#handleQrJam"      styleClass="qr-btn" text="🕐 Jam Buka" />
+                    <Button onAction="#handleQrLokasi"   styleClass="qr-btn" text="📍 Lokasi" />
+                    <Button onAction="#handleQrPesan"    styleClass="qr-btn"
+                            style="-fx-background-color:#10B981;-fx-text-fill:white;"
+                            text="🛒 Pesan" />
+                </HBox>
 
+                <!-- Chat area -->
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                            styleClass="chat-scroll" VBox.vgrow="ALWAYS"
+                            prefHeight="380">
+                    <VBox fx:id="vboxMessages" spacing="8" styleClass="chat-messages">
+                        <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
+                    </VBox>
+                </ScrollPane>
 
-    <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="chat-scroll" VBox.vgrow="ALWAYS">
-        <VBox fx:id="vboxMessages" spacing="8" styleClass="chat-messages">
-            <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
-        </VBox>
-    </ScrollPane>
+                <!-- Input area -->
+                <HBox alignment="CENTER" spacing="10" styleClass="chat-input-area">
+                    <padding><Insets bottom="12" left="16" right="16" top="12" /></padding>
+                    <TextField fx:id="txtInput" promptText="Tanyakan sesuatu atau ketik 'pesan'..."
+                               styleClass="chat-input" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnKirim" onAction="#handleKirim"
+                            styleClass="btn-send" text="▶" />
+                </HBox>
+            </VBox>
+        </Tab>
 
+        <!-- ════ TAB 2: TRACKING PESANAN ════ -->
+        <Tab text="📦 Tracking Pesanan">
+            <VBox spacing="12">
+                <padding><Insets bottom="16" left="20" right="20" top="16" /></padding>
 
-    <HBox alignment="CENTER" spacing="10" styleClass="chat-input-area">
-        <padding><Insets bottom="12" left="16" right="16" top="12" /></padding>
-        <TextField fx:id="txtInput" promptText="Tanyakan sesuatu..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnKirim" onAction="#handleKirim" styleClass="btn-send" text="▶" />
-    </HBox>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
+                           text="📦 Status Pesanan Saya" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#handleRefreshTracking"
+                            style="-fx-background-color:#2563EB;-fx-text-fill:white;
+                                   -fx-background-radius:6px;-fx-padding:6 14;"
+                            text="🔄 Refresh" />
+                </HBox>
+
+                <!-- Tabel tracking -->
+                <TableView fx:id="tblTracking" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTrId"      prefWidth="45"  text="ID" />
+                        <TableColumn fx:id="colTrLayanan" prefWidth="180" text="Layanan" />
+                        <TableColumn fx:id="colTrBerat"   prefWidth="90"  text="Berat/Jml" />
+                        <TableColumn fx:id="colTrTotal"   prefWidth="130" text="Total Harga" />
+                        <TableColumn fx:id="colTrStatus"  prefWidth="140" text="Status" />
+                        <TableColumn fx:id="colTrTanggal" prefWidth="155" text="Tanggal" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Belum ada pesanan. Gunakan tombol 🛒 Pesan untuk mulai." />
+                    </placeholder>
+                </TableView>
+
+                <Label style="-fx-text-fill:#64748B;-fx-font-size:11px;"
+                       text="Status diperbarui secara otomatis oleh admin. Tekan Refresh untuk memuat terbaru." />
+            </VBox>
+        </Tab>
+
+    </TabPane>
 
 </VBox>
