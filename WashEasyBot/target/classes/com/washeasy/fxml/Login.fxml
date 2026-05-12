@@ -27,7 +27,10 @@
         <Label styleClass="form-heading" text="Get's Started" />
         <HBox spacing="4" style="-fx-padding:2 0 22 0;">
             <Label styleClass="text-muted" text="Don't have Account?" />
-            <Label styleClass="link-label" text="Sign Up" />
+            <!-- [MODIFIED] Diubah dari Label menjadi Button agar bisa trigger handleGoSignUp -->
+            <Button onAction="#handleGoSignUp" styleClass="link-label"
+                    style="-fx-background-color:transparent;-fx-cursor:hand;-fx-padding:0;-fx-border-color:transparent;"
+                    text="Sign Up" />
         </HBox>
 
 
