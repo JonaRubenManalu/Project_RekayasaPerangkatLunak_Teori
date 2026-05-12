@@ -6,10 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
-/**
- * LoginController — menangani logika halaman Login.fxml
- * Dikontrol via SceneBuilder: tombol Login terhubung ke handleLogin().
- */
+
 public class LoginController {
 
     // ── FXML Injections ──────────────────────────────────────────
@@ -64,8 +61,20 @@ public class LoginController {
         }
     }
 
+    // [ADDED] Navigasi ke halaman Sign Up saat button "Sign Up" ditekan
+    @FXML
+    public void handleGoSignUp() {
+        try {
+            SceneManager.switchScene(rootPane, "/com/washeasy/fxml/SignUp.fxml",
+                    "WashEasy Bot — Daftar Akun", null);
+        } catch (Exception e) {
+            showError("Gagal membuka halaman Sign Up: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void showError(String msg) {
-        lblError.setText("⚠ " + msg);
+        lblError.setText("\u26A0 " + msg);
         lblError.setVisible(true);
     }
 }

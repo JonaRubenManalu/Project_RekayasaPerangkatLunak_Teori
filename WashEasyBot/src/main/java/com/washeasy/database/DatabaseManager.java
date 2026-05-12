@@ -2,10 +2,7 @@ package com.washeasy.database;
 
 import java.sql.*;
 
-/**
- * DatabaseManager — mengelola koneksi SQLite dan inisialisasi tabel.
- * Menggunakan pola Singleton agar hanya ada satu koneksi aktif.
- */
+
 public class DatabaseManager {
 
     private static final String DB_URL = "jdbc:sqlite:washeasy.db";
@@ -71,10 +68,24 @@ public class DatabaseManager {
             );
         """;
 
+        // [ADDED] Tabel history untuk menyimpan pesanan dari chatbot ordering
+        String sqlHistory = """
+            CREATE TABLE IF NOT EXISTS history (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                username      VARCHAR(50)  NOT NULL,
+                nama_layanan  VARCHAR(100) NOT NULL,
+                berat_kg      REAL         NOT NULL DEFAULT 1,
+                total_harga   REAL         NOT NULL,
+                status        VARCHAR(50)  NOT NULL DEFAULT 'Sedang Diproses',
+                created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """;
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sqlServices);
             stmt.execute(sqlUsers);
             stmt.execute(sqlChatLogs);
+            stmt.execute(sqlHistory); // [ADDED] buat tabel history pesanan
             System.out.println("[DB] Tabel berhasil disiapkan.");
         } catch (SQLException e) {
             System.err.println("[DB] Gagal membuat tabel: " + e.getMessage());
