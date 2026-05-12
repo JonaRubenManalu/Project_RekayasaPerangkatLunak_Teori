@@ -33,7 +33,7 @@ public class LoginController {
 
         // Validasi input kosong
         if (username.isEmpty() || password.isEmpty()) {
-            showError("Username dan password tidak boleh kosong!");
+            showError("Username dan Password tidak boleh kosong!");
             return;
         }
 
@@ -52,11 +52,11 @@ public class LoginController {
                             "WashEasy Bot — Laundry Chatbot", user);
                 }
             } catch (Exception ex) {
-                showError("Gagal membuka halaman: " + ex.getMessage());
+                showError("Gagal Membuka Halaman: " + ex.getMessage());
                 ex.printStackTrace();
             }
         } else {
-            showError("Username atau password salah. Coba lagi.");
+            showError("Username atau password salah. Silahkan Coba lagi.");
             txtPassword.clear();
         }
     }
