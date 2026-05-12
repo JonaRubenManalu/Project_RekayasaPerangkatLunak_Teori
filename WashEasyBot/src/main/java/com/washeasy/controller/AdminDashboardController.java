@@ -1,8 +1,11 @@
 package com.washeasy.controller;
 
+import com.washeasy.database.DatabaseManager;
+import com.washeasy.model.OrderHistory;
 import com.washeasy.model.Service;
 import com.washeasy.model.User;
 import com.washeasy.util.SceneManager;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,10 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-/**
- * AdminDashboardController — menangani AdminDashboard.fxml
- * Fitur: lihat layanan, tambah, edit, hapus (FR-04)
- */
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class AdminDashboardController {
 
     // ── FXML Injections ──────────────────────────────────────────
@@ -46,12 +48,27 @@ public class AdminDashboardController {
     private Service editingService = null;  // null = mode tambah, tidak null = mode edit
     private User    currentUser;
 
+    // [ADDED] Field untuk tab Manajemen Pesanan
+    @FXML private TableView<OrderHistory>               tblPesanan;
+    @FXML private TableColumn<OrderHistory, Integer>    colPId;
+    @FXML private TableColumn<OrderHistory, String>     colPUser;
+    @FXML private TableColumn<OrderHistory, String>     colPLayanan;
+    @FXML private TableColumn<OrderHistory, Double>     colPBerat;
+    @FXML private TableColumn<OrderHistory, Double>     colPTotal;
+    @FXML private TableColumn<OrderHistory, String>     colPStatus;
+    @FXML private TableColumn<OrderHistory, String>     colPTanggal;
+    @FXML private Label                                 lblPesananStatus;
+
+    private final DatabaseManager db = DatabaseManager.getInstance();
+
     @FXML
     public void initialize() {
         setupTable();
         setupComboBox();
         loadData();
         lblFormStatus.setVisible(false);
+        setupPesananTable(); // [ADDED]
+        loadPesananData();   // [ADDED]
     }
 
     /** Dipanggil oleh SceneManager setelah scene di-load */
@@ -108,6 +125,8 @@ public class AdminDashboardController {
         clearForm();
         btnSimpan.setText("Simpan");
         lblFormStatus.setVisible(false);
+        setupPesananTable(); // [ADDED]
+        loadPesananData();   // [ADDED]
     }
 
     /** Tombol Simpan → tambah baru atau update */
@@ -166,6 +185,115 @@ public class AdminDashboardController {
         btnSimpan.setText("Simpan");
         lblFormStatus.setVisible(false);
         tblLayanan.getSelectionModel().clearSelection();
+    }
+
+    // ── [ADDED] Fitur Manajemen Pesanan ──────────────────────────────────────
+
+    /** Setup kolom tabel pesanan */
+    private void setupPesananTable() {
+        if (tblPesanan == null) return;
+        colPId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colPUser.setCellValueFactory(new PropertyValueFactory<>("username"));
+        colPLayanan.setCellValueFactory(new PropertyValueFactory<>("namaLayanan"));
+
+        colPBerat.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("%.1f kg", item));
+            }
+        });
+        colPBerat.setCellValueFactory(new PropertyValueFactory<>("beratKg"));
+
+        colPTotal.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("Rp %,.0f", item));
+            }
+        });
+        colPTotal.setCellValueFactory(new PropertyValueFactory<>("totalHarga"));
+
+        colPStatus.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                if ("Siap Diambil".equals(item)) {
+                    setStyle("-fx-text-fill:#10B981;-fx-font-weight:bold;");
+                } else {
+                    setStyle("-fx-text-fill:#F59E0B;-fx-font-weight:bold;");
+                }
+            }
+        });
+        colPStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colPTanggal.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+    }
+
+    /** Load semua pesanan dari tabel history ke TableView admin */
+    private void loadPesananData() {
+        if (tblPesanan == null) return;
+        ObservableList<OrderHistory> list = FXCollections.observableArrayList();
+        try {
+            ResultSet rs = db.query(
+                    "SELECT id, username, nama_layanan, berat_kg, total_harga, status, created_at " +
+                            "FROM history ORDER BY created_at DESC"
+            );
+            while (rs.next()) {
+                list.add(new OrderHistory(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("nama_layanan"),
+                        rs.getDouble("berat_kg"),
+                        rs.getDouble("total_harga"),
+                        rs.getString("status"),
+                        rs.getString("created_at")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("[AdminDashboard] Gagal load pesanan: " + e.getMessage());
+        }
+        tblPesanan.setItems(list);
+    }
+
+    /** Tombol 'Tandai Siap Diambil' — update status pesanan yang dipilih */
+    @FXML
+    public void handleSiapDiambil() {
+        OrderHistory selected = tblPesanan.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showPesananStatus("\u26A0 Pilih pesanan dari tabel terlebih dahulu.");
+            return;
+        }
+        if ("Siap Diambil".equals(selected.getStatus())) {
+            showPesananStatus("\u2139\uFE0F Pesanan ini sudah berstatus 'Siap Diambil'.");
+            return;
+        }
+        try {
+            int rows = db.preparedExecute(
+                    "UPDATE history SET status = 'Siap Diambil' WHERE id = ?",
+                    selected.getId()
+            );
+            if (rows > 0) {
+                showPesananStatus("\u2705 Status pesanan #" + selected.getId() + " diubah menjadi 'Siap Diambil'.");
+                loadPesananData();
+            } else {
+                showPesananStatus("\u274C Gagal mengubah status pesanan.");
+            }
+        } catch (SQLException e) {
+            showPesananStatus("\u274C Error: " + e.getMessage());
+        }
+    }
+
+    /** Tombol Refresh tabel pesanan */
+    @FXML
+    public void handleRefreshPesanan() {
+        loadPesananData();
+        showPesananStatus("\uD83D\uDD04 Data pesanan diperbarui.");
+    }
+
+    private void showPesananStatus(String msg) {
+        if (lblPesananStatus != null) {
+            lblPesananStatus.setText(msg);
+            lblPesananStatus.setVisible(true);
+        }
     }
 
     /** Tombol Logout */
