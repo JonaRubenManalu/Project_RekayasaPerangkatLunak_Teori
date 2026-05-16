@@ -6,11 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController$Step.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController$Step.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/SignUpController.jav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/washeasy.db" beforeDir="false" afterPath="$PROJECT_DIR$/washeasy.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,21 +30,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Kuliah/Semester 6/Rekayasa Perangkat Lunak Berbasis Orientasi/#2/Project_RekayasaPerangkatLunak_Teori",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Kuliah/Semester 6/Rekayasa Perangkat Lunak Berbasis Orientasi/#2/Project_RekayasaPerangkatLunak_Teori&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.washeasy.controller" />
@@ -72,7 +67,8 @@
       <updated>1776602325741</updated>
       <workItem from="1776602327010" duration="54000" />
       <workItem from="1778563722260" duration="13000" />
-      <workItem from="1778947789409" duration="882000" />
+      <workItem from="1778947789409" duration="974000" />
+      <workItem from="1778949122219" duration="66000" />
     </task>
     <servers />
   </component>
