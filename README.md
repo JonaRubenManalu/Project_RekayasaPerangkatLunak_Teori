@@ -194,8 +194,11 @@ Akun ini otomatis di-seed ke database waktu aplikasi pertama kali jalan. User ba
 ##  Tim Pengembang
 
 **Kelompok MUGEN**
-|71231048 |Jona Ruben Manalu|
-|71241126|Valentino Kevin Yulianto|
-|71241138|Daniel Adi Pramudya|
+| NIM  | Nama  |
+|-------|----------|
+|71231048  | Jona Ruben Manalu  |
+|71241126 | Valentino Kevin Yulianto |
+|71241138 | Daniel Adi Pramudya   |
+
 
 
