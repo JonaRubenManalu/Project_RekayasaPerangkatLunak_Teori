@@ -1,20 +1,20 @@
-# WashEasy Bot 🧺
+# WashEasy Bot 
 **Chatbot Laundry UMKM — Tugas RPLBO TI0373 UKDW**
 Kelompok MUGEN | Semester Genap TA 2025/2026
 
 ---
 
-## 📌 Tentang Aplikasi
+##  Tentang Aplikasi
 
 WashEasy Bot adalah aplikasi desktop berbasis chatbot yang kami bangun sebagai solusi digital untuk usaha laundry skala UMKM. Ide dasarnya sederhana: banyak pelanggan laundry yang bingung soal harga, waktu pengerjaan, atau layanan apa yang tersedia — biasanya mereka harus telepon dulu atau datang langsung. Nah, WashEasy Bot hadir untuk menggantikan itu semua lewat antarmuka chatbot yang bisa diakses kapan saja.
 
 Aplikasi ini punya dua sisi: **sisi pelanggan** yang bisa tanya-tanya lewat chatbot dan langsung pesan layanan, dan **sisi admin** yang bisa kelola data layanan dari dashboard. Semua data disimpan lokal pakai SQLite, jadi nggak perlu setup server dulu buat nyoba.
 
-> Proyek ini dibuat dalam rangka mata kuliah Rekayasa Perangkat Lunak Berorientasi Objek (RPLBO). Progress saat ini masih **40%** — fitur inti sudah jalan, dan kami masih terus ngembangin fitur sisanya.
+
 
 ---
 
-## 🗂️ Struktur Project
+##  Struktur Project
 
 ```
 WashEasyBot/
@@ -56,7 +56,7 @@ WashEasyBot/
 
 ---
 
-## 🧠 Cara Kerja Aplikasi
+##  Cara Kerja Aplikasi
 
 ### Alur Chatbot (Sisi User)
 
@@ -180,7 +180,7 @@ mvn javafx:run
 
 ---
 
-## 🔐 Akun Default
+##  Akun Default
 
 | Role  | Username | Password  |
 |-------|----------|-----------|
@@ -191,12 +191,11 @@ Akun ini otomatis di-seed ke database waktu aplikasi pertama kali jalan. User ba
 
 ---
 
-## 👥 Tim Pengembang
+##  Tim Pengembang
 
-**Kelompok MUGEN** — Mahasiswa TI UKDW, Semester Genap TA 2025/2026
+**Kelompok MUGEN**
+|71231048 |Jona Ruben Manalu|
+|71241126|Valentino Kevin Yulianto|
+|71241138|Daniel Adi Pramudya|
 
-Mata kuliah: Rekayasa Perangkat Lunak Berorientasi Objek (RPLBO) — TI0373
 
----
-
-*README ini dibuat untuk mendokumentasikan progress dan cara kerja aplikasi WashEasy Bot sebagai bagian dari tugas RPLBO.*
