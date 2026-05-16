@@ -8,21 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * ChatbotController — wrapper di atas ChatbotEngine yang menambahkan
- * sistem pemesanan sekuensial (step-by-step order flow).
- *
- * CARA INTEGRASI:
- *   1. Tambahkan field berikut ke UserDashboardController:
- *        private final ChatbotController chatbotController = new ChatbotController();
- *   2. Di handleKirim(), ganti:
- *        String response = chatbot.processInput(input);
- *      menjadi:
- *        String response = chatbotController.processInput(input, currentUser.getUsername());
- *
- * Sistem ini menggunakan state machine sederhana (enum Step) untuk memandu
- * pengguna melewati alur pemesanan: pilih layanan → masukkan berat → konfirmasi → simpan.
- */
+
 public class ChatbotController {
 
     // ── State machine untuk alur pemesanan ──────────────────────
@@ -56,14 +42,7 @@ public class ChatbotController {
         this.serviceController = new ServiceController();
     }
 
-    /**
-     * Titik masuk utama. Jika dalam alur pemesanan, proses step;
-     * jika tidak, teruskan ke ChatbotEngine biasa.
-     *
-     * @param input    teks dari user
-     * @param username username yang sedang login (untuk menyimpan history)
-     * @return respons teks chatbot
-     */
+
     public String processInput(String input, String username) {
         if (input == null || input.isBlank()) return "Silakan ketik pertanyaan Anda.";
 
@@ -199,10 +178,10 @@ public class ChatbotController {
 
         if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi")) {
             boolean saved = saveOrder(username);
-            resetFlow();
 
             if (saved) {
-                return String.format(
+                // 1. Rangkai teks struk sukses terlebih dahulu selagi variabel masih menyimpan data
+                String successMessage = String.format(
                         "✅ Pesanan berhasil dibuat!\n\n" +
                                 "📋 Detail Pesanan:\n" +
                                 "   Layanan   : %s\n" +
@@ -213,7 +192,14 @@ public class ChatbotController {
                                 "Terima kasih! 😊",
                         selectedLayanan, inputBerat, selectedSatuan, totalHarga
                 );
+
+                // 2. Setelah string berhasil dibuat, baru bersihkan data flow pemesanan
+                resetFlow();
+
+                // 3. Kembalikan teks respons yang sudah lengkap ke UI
+                return successMessage;
             } else {
+                resetFlow();
                 return "❌ Gagal menyimpan pesanan. Silakan coba lagi atau hubungi admin.";
             }
         }
