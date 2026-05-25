@@ -23,7 +23,10 @@ public class Main extends Application {
 
         primaryStage.setTitle("WashEasy Bot — Laundry Chatbot");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        primaryStage.setMaximized(true);
+        primaryStage.setMinWidth(860);
+        primaryStage.setMinHeight(520);
         primaryStage.show();
     }
 

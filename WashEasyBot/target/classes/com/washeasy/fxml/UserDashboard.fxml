@@ -15,16 +15,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!--
-  UserDashboard.fxml — versi diperbarui dengan TabPane
-  Letakkan di: src/main/resources/com/washeasy/fxml/UserDashboard.fxml
-  (GANTIKAN file yang lama)
-
-  Perubahan:
-  - Konten utama dibungkus TabPane (2 tab: Chatbot + Tracking Pesanan)
-  - Tambah quick reply button "🛒 Pesan" untuk trigger alur ordering
--->
-<VBox fx:id="rootPane" prefHeight="640" prefWidth="860" styleClass="root-pane"
+<VBox fx:id="rootPane" styleClass="root-pane"
       xmlns="http://javafx.com/javafx/25"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.washeasy.controller.UserDashboardController">
@@ -33,7 +24,7 @@
     <HBox alignment="CENTER_LEFT" spacing="8" styleClass="navbar">
         <padding><Insets bottom="0" left="20" right="20" top="0" /></padding>
         <Label prefHeight="67.0" prefWidth="77.0" style="-fx-font-size:22px;" />
-        <ImageView fitHeight="82.0" fitWidth="124.0">
+        <ImageView fitHeight="82.0" fitWidth="124.0" preserveRatio="true">
             <image><Image url="@../images/logo.png" /></image>
         </ImageView>
         <VBox spacing="0">
@@ -51,7 +42,7 @@
 
         <!-- ════ TAB 1: CHATBOT ════ -->
         <Tab text="🤖 Chatbot">
-            <VBox>
+            <VBox VBox.vgrow="ALWAYS">
                 <!-- Bot header -->
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="chat-header">
                     <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
@@ -78,10 +69,10 @@
                             text="🛒 Pesan" />
                 </HBox>
 
-                <!-- Chat area -->
-                <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
-                            styleClass="chat-scroll" VBox.vgrow="ALWAYS"
-                            prefHeight="380">
+                <!-- Chat area — mengisi sisa ruang -->
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="false"
+                            hbarPolicy="NEVER" styleClass="chat-scroll"
+                            VBox.vgrow="ALWAYS">
                     <VBox fx:id="vboxMessages" spacing="8" styleClass="chat-messages">
                         <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
                     </VBox>
@@ -100,10 +91,9 @@
 
         <!-- ════ TAB 2: TRACKING PESANAN ════ -->
         <Tab text="📦 Tracking Pesanan">
-            <VBox spacing="12">
+            <VBox spacing="12" VBox.vgrow="ALWAYS">
                 <padding><Insets bottom="16" left="20" right="20" top="16" /></padding>
 
-                <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
                            text="📦 Status Pesanan Saya" />
@@ -114,15 +104,14 @@
                             text="🔄 Refresh" />
                 </HBox>
 
-                <!-- Tabel tracking -->
                 <TableView fx:id="tblTracking" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colTrId"      prefWidth="45"  text="ID" />
-                        <TableColumn fx:id="colTrLayanan" prefWidth="180" text="Layanan" />
-                        <TableColumn fx:id="colTrBerat"   prefWidth="90"  text="Berat/Jml" />
-                        <TableColumn fx:id="colTrTotal"   prefWidth="130" text="Total Harga" />
-                        <TableColumn fx:id="colTrStatus"  prefWidth="140" text="Status" />
-                        <TableColumn fx:id="colTrTanggal" prefWidth="155" text="Tanggal" />
+                        <TableColumn fx:id="colTrId"      prefWidth="50"  text="ID" />
+                        <TableColumn fx:id="colTrLayanan" prefWidth="200" text="Layanan" />
+                        <TableColumn fx:id="colTrBerat"   prefWidth="100" text="Berat/Jml" />
+                        <TableColumn fx:id="colTrTotal"   prefWidth="140" text="Total Harga" />
+                        <TableColumn fx:id="colTrStatus"  prefWidth="150" text="Status" />
+                        <TableColumn fx:id="colTrTanggal" prefWidth="180" text="Tanggal" />
                     </columns>
                     <placeholder>
                         <Label text="Belum ada pesanan. Gunakan tombol 🛒 Pesan untuk mulai." />

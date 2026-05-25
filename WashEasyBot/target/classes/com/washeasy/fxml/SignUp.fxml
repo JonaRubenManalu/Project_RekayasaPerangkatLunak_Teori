@@ -8,22 +8,25 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="rootPane" prefHeight="520" prefWidth="860" styleClass="root-pane"
+<HBox fx:id="rootPane" styleClass="root-pane"
       xmlns="http://javafx.com/javafx/25"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.washeasy.controller.SignUpController">
 
     <!-- ══ FORM SIDE ══ -->
-    <VBox prefHeight="520" prefWidth="430" spacing="0" styleClass="login-form-side">
-        <padding><Insets bottom="48" left="48" right="48" top="48" /></padding>
+    <VBox spacing="0" styleClass="login-form-side"
+          minWidth="380" maxWidth="520"
+          HBox.hgrow="ALWAYS">
+        <padding><Insets bottom="48" left="64" right="64" top="60" /></padding>
 
         <Label styleClass="brand-title" text="WashEasy" />
         <Label style="-fx-padding:0 0 28 0;" styleClass="brand-sub" text="Laundry Chatbot System" />
 
         <Label styleClass="form-heading" text="Buat Akun Baru" />
-        <HBox spacing="4" style="-fx-padding:2 0 22 0;">
+        <HBox spacing="4" style="-fx-padding:2 0 24 0;">
             <Label styleClass="text-muted" text="Sudah punya akun?" />
             <Button onAction="#handleBackToLogin" styleClass="link-label"
                     style="-fx-background-color:transparent;-fx-cursor:hand;-fx-padding:0;-fx-border-color:transparent;"
@@ -32,52 +35,53 @@
 
         <!-- USERNAME -->
         <Label styleClass="input-label" text="USERNAME" />
-        <HBox spacing="0" style="-fx-padding:0 0 14 0;" styleClass="input-wrap">
-            <Label prefHeight="39.0" prefWidth="51.0" styleClass="input-icon" text="👤" textAlignment="CENTER" />
-            <TextField fx:id="txtUsername" maxWidth="Infinity" prefHeight="38.0" prefWidth="282.0"
+        <HBox spacing="0" style="-fx-padding:0 0 16 0;" styleClass="input-wrap">
+            <Label prefHeight="42.0" prefWidth="52.0" styleClass="input-icon" text="👤" textAlignment="CENTER" />
+            <TextField fx:id="txtUsername" maxWidth="Infinity" prefHeight="42.0"
                        promptText="Minimal 4 karakter" styleClass="login-input" HBox.hgrow="ALWAYS" />
         </HBox>
 
         <!-- PASSWORD -->
         <Label styleClass="input-label" text="PASSWORD" />
-        <HBox spacing="0" style="-fx-padding:0 0 14 0;" styleClass="input-wrap">
-            <Label prefHeight="45.0" prefWidth="50.0" styleClass="input-icon" text="🔒" />
-            <PasswordField fx:id="txtPassword" maxWidth="Infinity" prefHeight="31.0" prefWidth="283.0"
+        <HBox spacing="0" style="-fx-padding:0 0 16 0;" styleClass="input-wrap">
+            <Label prefHeight="42.0" prefWidth="52.0" styleClass="input-icon" text="🔒" />
+            <PasswordField fx:id="txtPassword" maxWidth="Infinity" prefHeight="42.0"
                            promptText="Minimal 6 karakter" styleClass="login-input" HBox.hgrow="ALWAYS" />
         </HBox>
 
         <!-- KONFIRMASI PASSWORD -->
         <Label styleClass="input-label" text="KONFIRMASI PASSWORD" />
-        <HBox spacing="0" style="-fx-padding:0 0 20 0;" styleClass="input-wrap">
-            <Label prefHeight="45.0" prefWidth="50.0" styleClass="input-icon" text="🔒" />
-            <PasswordField fx:id="txtConfirmPassword" maxWidth="Infinity" prefHeight="31.0" prefWidth="283.0"
+        <HBox spacing="0" style="-fx-padding:0 0 24 0;" styleClass="input-wrap">
+            <Label prefHeight="42.0" prefWidth="52.0" styleClass="input-icon" text="🔒" />
+            <PasswordField fx:id="txtConfirmPassword" maxWidth="Infinity" prefHeight="42.0"
                            promptText="Ulangi password" styleClass="login-input" HBox.hgrow="ALWAYS" />
         </HBox>
 
-        <!-- Error & Success labels -->
         <Label fx:id="lblError"   style="-fx-padding:0 0 4 0;" styleClass="error-label"   text="" wrapText="true" />
-        <Label fx:id="lblSuccess" style="-fx-padding:0 0 4 0;" styleClass="success-label"  text="" wrapText="true" />
+        <Label fx:id="lblSuccess" style="-fx-padding:0 0 8 0;" styleClass="success-label"  text="" wrapText="true" />
 
-        <!-- Tombol Daftar -->
         <Button maxWidth="Infinity" onAction="#handleSignUp" styleClass="btn-login" text="Daftar" />
 
-        <Label style="-fx-padding:12 0 0 0;" styleClass="hint-text"
+        <Label style="-fx-padding:14 0 0 0;" styleClass="hint-text"
                text="Akun baru akan terdaftar sebagai costomer." />
+
+        <Region VBox.vgrow="ALWAYS" />
     </VBox>
 
     <!-- ══ HERO SIDE ══ -->
-    <VBox alignment="CENTER" prefHeight="520" prefWidth="430" spacing="8"
-          style="-fx-background-color: add8e6;" styleClass="login-hero">
-        <ImageView fitHeight="109.0" fitWidth="200.0">
+    <VBox alignment="CENTER" spacing="12"
+          style="-fx-background-color: #add8e6;" styleClass="login-hero"
+          HBox.hgrow="ALWAYS">
+        <ImageView fitHeight="130.0" fitWidth="240.0" preserveRatio="true">
             <image>
                 <Image url="@../images/logo.png" />
             </image>
         </ImageView>
-        <Label text="WashEasy" />
-        <Label text="LAUNDRY CHATBOT" />
-        <Label contentDisplay="CENTER" prefHeight="98.0" prefWidth="166.0"
+        <Label styleClass="hero-brand-title" text="WashEasy" />
+        <Label styleClass="hero-brand-sub"   text="LAUNDRY CHATBOT" />
+        <Label styleClass="hero-desc"
                text="Daftar sekarang dan nikmati&#10;layanan laundry cerdas&#10;bersama WashEasy Bot."
-               textAlignment="JUSTIFY" />
+               textAlignment="CENTER" />
     </VBox>
 
 </HBox>
