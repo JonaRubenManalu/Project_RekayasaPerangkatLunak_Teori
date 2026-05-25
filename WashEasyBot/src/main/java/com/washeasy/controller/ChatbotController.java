@@ -176,7 +176,7 @@ public class ChatbotController {
     private String handleKonfirmasi(String input, String username) {
         String low = input.toLowerCase();
 
-        if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi")) {
+        if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi","y")) {
             boolean saved = saveOrder(username);
 
             if (saved) {
@@ -204,7 +204,7 @@ public class ChatbotController {
             }
         }
 
-        if (containsAny(low, "tidak", "no", "gak", "ngga", "batal")) {
+        if (containsAny(low, "tidak", "no", "gak", "ngga", "batal", "wegah")) {
             resetFlow();
             return "❌ Pemesanan dibatalkan. Ada yang bisa saya bantu lagi?";
         }
