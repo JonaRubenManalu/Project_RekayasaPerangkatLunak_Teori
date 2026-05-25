@@ -16,16 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<!--
-  AdminDashboard.fxml — versi diperbarui dengan TabPane
-  Letakkan di: src/main/resources/com/washeasy/fxml/AdminDashboard.fxml
-  (GANTIKAN file yang lama)
-
-  Perubahan:
-  - Tab 1: Manajemen Layanan (isi sama seperti sebelumnya)
-  - Tab 2: Manajemen Pesanan (baru) — dengan TableView history & tombol update status
--->
-<VBox fx:id="rootPane" prefHeight="720" prefWidth="1100" styleClass="root-pane"
+<VBox fx:id="rootPane" styleClass="root-pane"
       xmlns="http://javafx.com/javafx/25"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.washeasy.controller.AdminDashboardController">
@@ -34,7 +25,7 @@
     <HBox alignment="CENTER_LEFT" spacing="8" styleClass="navbar">
         <padding><Insets bottom="0" left="20" right="20" top="0" /></padding>
         <Label prefHeight="32.0" prefWidth="59.0" style="-fx-font-size:22px;" />
-        <ImageView fitHeight="63.0" fitWidth="108.0">
+        <ImageView fitHeight="63.0" fitWidth="108.0" preserveRatio="true">
             <image><Image url="@../images/logo.png" /></image>
         </ImageView>
         <VBox spacing="0">
@@ -52,7 +43,7 @@
         <VBox spacing="2">
             <Text fx:id="txtWelcome" styleClass="hero-title"
                   text="Selamat Datang Admin di WashEasy 👋"
-                  wrappingWidth="400" />
+                  wrappingWidth="500" />
             <Label styleClass="hero-sub-text"
                    text="Kelola layanan dan pesanan laundry dengan mudah" />
         </VBox>
@@ -76,10 +67,10 @@
 
         <!-- ════ TAB 1: MANAJEMEN LAYANAN ════ -->
         <Tab text="🛠 Manajemen Layanan">
-            <HBox spacing="16" VBox.vgrow="ALWAYS" style="-fx-padding:12 0 0 0;">
+            <HBox spacing="16" style="-fx-padding:12 0 0 0;">
 
-                <!-- Tabel layanan -->
-                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                <!-- Tabel layanan — mengisi sisa ruang horizontal -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Label styleClass="section-title" text="Data Layanan Laundry" />
                         <Region HBox.hgrow="ALWAYS" />
@@ -89,12 +80,12 @@
 
                     <TableView fx:id="tblLayanan" styleClass="data-table" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="colId"       prefWidth="40"  text="ID" />
-                            <TableColumn fx:id="colNama"     prefWidth="160" text="Nama Layanan" />
-                            <TableColumn fx:id="colDeskripsi" prefWidth="200" text="Deskripsi" />
-                            <TableColumn fx:id="colHarga"    prefWidth="100" text="Harga" />
-                            <TableColumn fx:id="colSatuan"   prefWidth="70"  text="Satuan" />
-                            <TableColumn fx:id="colEstimasi" prefWidth="90"  text="Estimasi" />
+                            <TableColumn fx:id="colId"        prefWidth="50"  text="ID" />
+                            <TableColumn fx:id="colNama"      prefWidth="180" text="Nama Layanan" />
+                            <TableColumn fx:id="colDeskripsi" prefWidth="220" text="Deskripsi" />
+                            <TableColumn fx:id="colHarga"     prefWidth="110" text="Harga" />
+                            <TableColumn fx:id="colSatuan"    prefWidth="80"  text="Satuan" />
+                            <TableColumn fx:id="colEstimasi"  prefWidth="100" text="Estimasi" />
                         </columns>
                         <placeholder>
                             <Label styleClass="text-muted" text="Belum ada data layanan." />
@@ -102,8 +93,8 @@
                     </TableView>
                 </VBox>
 
-                <!-- Form tambah/edit -->
-                <VBox prefWidth="260" spacing="10" styleClass="form-card">
+                <!-- Form tambah/edit — lebar tetap -->
+                <VBox prefWidth="280" minWidth="240" spacing="10" styleClass="form-card">
                     <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
                     <Label styleClass="form-card-title" text="Form Layanan" />
 
@@ -127,6 +118,8 @@
 
                     <Label fx:id="lblFormStatus" styleClass="status-label" text="" wrapText="true" />
 
+                    <Region VBox.vgrow="ALWAYS" />
+
                     <HBox spacing="8">
                         <Button fx:id="btnBatal" maxWidth="Infinity" onAction="#handleBatal"
                                 styleClass="btn-secondary" text="Batal" HBox.hgrow="ALWAYS" />
@@ -140,9 +133,8 @@
 
         <!-- ════ TAB 2: MANAJEMEN PESANAN ════ -->
         <Tab text="📦 Manajemen Pesanan">
-            <VBox spacing="12" style="-fx-padding:12 0 0 0;">
+            <VBox spacing="12" style="-fx-padding:12 0 0 0;" VBox.vgrow="ALWAYS">
 
-                <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
                            text="📦 Semua Pesanan Customer" />
@@ -158,23 +150,21 @@
                             text="🔄 Refresh" />
                 </HBox>
 
-                <!-- Tabel pesanan -->
                 <TableView fx:id="tblPesanan" VBox.vgrow="ALWAYS" styleClass="data-table">
                     <columns>
-                        <TableColumn fx:id="colPId"      prefWidth="50"  text="ID" />
-                        <TableColumn fx:id="colPUser"    prefWidth="130" text="Customer" />
-                        <TableColumn fx:id="colPLayanan" prefWidth="180" text="Layanan" />
-                        <TableColumn fx:id="colPBerat"   prefWidth="90"  text="Berat/Jml" />
-                        <TableColumn fx:id="colPTotal"   prefWidth="130" text="Total Harga" />
-                        <TableColumn fx:id="colPStatus"  prefWidth="140" text="Status" />
-                        <TableColumn fx:id="colPTanggal" prefWidth="160" text="Tanggal Pesan" />
+                        <TableColumn fx:id="colPId"      prefWidth="55"  text="ID" />
+                        <TableColumn fx:id="colPUser"    prefWidth="150" text="Customer" />
+                        <TableColumn fx:id="colPLayanan" prefWidth="200" text="Layanan" />
+                        <TableColumn fx:id="colPBerat"   prefWidth="100" text="Berat/Jml" />
+                        <TableColumn fx:id="colPTotal"   prefWidth="140" text="Total Harga" />
+                        <TableColumn fx:id="colPStatus"  prefWidth="150" text="Status" />
+                        <TableColumn fx:id="colPTanggal" prefWidth="170" text="Tanggal Pesan" />
                     </columns>
                     <placeholder>
                         <Label text="Belum ada pesanan masuk." />
                     </placeholder>
                 </TableView>
 
-                <!-- Status label -->
                 <Label fx:id="lblPesananStatus"
                        style="-fx-font-size:12px;-fx-text-fill:#1E293B;" text="" />
 

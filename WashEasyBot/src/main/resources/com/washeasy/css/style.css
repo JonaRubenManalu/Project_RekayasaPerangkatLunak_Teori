@@ -375,3 +375,54 @@
 }
 
 
+
+/* ── FULLSCREEN / RESPONSIVE TAMBAHAN ─────────────────────────── */
+
+/* root-pane mengisi seluruh window */
+.root-pane {
+    -fx-pref-width: -1;
+    -fx-pref-height: -1;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+}
+
+/* Login & SignUp: kedua sisi mengisi tinggi penuh */
+.login-form-side {
+    -fx-pref-height: -1;
+    -fx-max-height: Infinity;
+    -fx-min-height: 0;
+}
+.login-hero {
+    -fx-pref-height: -1;
+    -fx-max-height: Infinity;
+    -fx-min-height: 0;
+}
+
+/* Hero side text styles */
+.hero-brand-title {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+.hero-brand-sub {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+.hero-desc {
+    -fx-text-fill: rgba(255,255,255,0.80);
+    -fx-font-size: 14px;
+    -fx-text-alignment: center;
+    -fx-line-spacing: 4px;
+    -fx-padding: 8 0 0 0;
+}
+
+/* TabPane mengisi sisa tinggi */
+.tab-pane {
+    -fx-pref-height: -1;
+    -fx-max-height: Infinity;
+}
+.tab-pane > .tab-content-area {
+    -fx-pref-height: -1;
+    -fx-max-height: Infinity;
+}
