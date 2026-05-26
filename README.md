@@ -150,36 +150,6 @@ File `washeasy.db` otomatis dibuat di direktori project waktu pertama kali aplik
 
 ---
 
-## 🚀 Cara Menjalankan
-
-### Prasyarat
-- **Java JDK 17**
-- **Maven 3.8+**
-- **IntelliJ IDEA** (direkomendasikan)
-- **SceneBuilder** (opsional, kalau mau edit FXML)
-
-### Langkah-langkah
-
-**1. Clone / Extract project**
-```bash
-# Kalau dari ZIP, extract dulu, lalu buka folder WashEasyBot di IntelliJ
-```
-
-**2. Build project**
-```bash
-cd WashEasyBot
-mvn clean install
-```
-
-**3. Jalankan aplikasi**
-```bash
-mvn javafx:run
-```
-
-> **Catatan:** File `washeasy.db` akan otomatis terbuat di direktori project saat pertama kali dijalankan. Kalau mau reset data, cukup hapus file `.db` tersebut.
-
----
-
 ##  Akun Default
 
 | Role  | Username | Password  |
