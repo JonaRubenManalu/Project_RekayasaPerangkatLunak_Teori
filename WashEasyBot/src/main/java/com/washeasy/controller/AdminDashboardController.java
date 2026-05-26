@@ -79,6 +79,7 @@ public class AdminDashboardController {
     @FXML private TextField fldFasNama;
     @FXML private TextField fldFasKet;
     @FXML private Label     lblFasilitasStatus;
+    @FXML private Label     lblFasilitasFormTitle;
     private Fasilitas editingFasilitas = null;
 
     // [NEW] Field untuk tab Template Pertanyaan (Keywords)
@@ -91,6 +92,7 @@ public class AdminDashboardController {
     @FXML private ComboBox<String> cmbKwCategory;
     @FXML private TextField   fldKwPriority;
     @FXML private Label       lblKeywordsStatus;
+    @FXML private Label       lblKeywordsFormTitle;
     private Keyword editingKeyword = null;
 
     private final DatabaseManager db = DatabaseManager.getInstance();
@@ -417,6 +419,8 @@ public class AdminDashboardController {
                         editingFasilitas = sel;
                         fldFasNama.setText(sel.getNamaFasilitas());
                         fldFasKet.setText(sel.getKeterangan());
+                        if (lblFasilitasFormTitle != null) lblFasilitasFormTitle.setText("✏ Edit Fasilitas");
+                        if (lblFasilitasStatus != null) lblFasilitasStatus.setVisible(false);
                     }
                 }
         );
@@ -440,6 +444,15 @@ public class AdminDashboardController {
             System.err.println("[AdminDashboard] Gagal load fasilitas: " + e.getMessage());
         }
         tblFasilitas.setItems(list);
+    }
+
+    @FXML
+    public void handleTambahFasilitas() {
+        editingFasilitas = null;
+        clearFasilitasForm();
+        tblFasilitas.getSelectionModel().clearSelection();
+        if (lblFasilitasFormTitle != null) lblFasilitasFormTitle.setText("✨ Tambah Fasilitas");
+        if (lblFasilitasStatus != null) lblFasilitasStatus.setVisible(false);
     }
 
     @FXML
@@ -498,6 +511,7 @@ public class AdminDashboardController {
         editingFasilitas = null;
         if (fldFasNama != null) fldFasNama.clear();
         if (fldFasKet  != null) fldFasKet.clear();
+        if (lblFasilitasFormTitle != null) lblFasilitasFormTitle.setText("Form Fasilitas");
     }
 
     private void showFasilitasStatus(String msg) {
@@ -524,6 +538,8 @@ public class AdminDashboardController {
                         fldKwKeyword.setText(sel.getKeyword());
                         if (cmbKwCategory != null) cmbKwCategory.setValue(sel.getCategory());
                         if (fldKwPriority != null) fldKwPriority.setText(String.valueOf(sel.getPriority()));
+                        if (lblKeywordsFormTitle != null) lblKeywordsFormTitle.setText("✏ Edit Keyword");
+                        if (lblKeywordsStatus != null) lblKeywordsStatus.setVisible(false);
                     }
                 }
         );
@@ -555,6 +571,15 @@ public class AdminDashboardController {
             System.err.println("[AdminDashboard] Gagal load keywords: " + e.getMessage());
         }
         tblKeywords.setItems(list);
+    }
+
+    @FXML
+    public void handleTambahKeyword() {
+        editingKeyword = null;
+        clearKeywordsForm();
+        tblKeywords.getSelectionModel().clearSelection();
+        if (lblKeywordsFormTitle != null) lblKeywordsFormTitle.setText("💬 Tambah Keyword");
+        if (lblKeywordsStatus != null) lblKeywordsStatus.setVisible(false);
     }
 
     @FXML
@@ -617,6 +642,7 @@ public class AdminDashboardController {
         if (fldKwKeyword  != null) fldKwKeyword.clear();
         if (fldKwPriority != null) fldKwPriority.setText("1");
         if (cmbKwCategory != null) cmbKwCategory.setValue("UMUM");
+        if (lblKeywordsFormTitle != null) lblKeywordsFormTitle.setText("Form Keyword");
     }
 
     private void showKeywordsStatus(String msg) {

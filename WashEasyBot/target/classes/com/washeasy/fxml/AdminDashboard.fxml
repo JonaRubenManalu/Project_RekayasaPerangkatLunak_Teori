@@ -220,6 +220,10 @@
                         <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
                                text="✨ Daftar Fasilitas" />
                         <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleTambahFasilitas"
+                                style="-fx-background-color:#2563EB;-fx-text-fill:white;
+                                       -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
+                                text="+ Tambah" />
                         <Button onAction="#handleHapusFasilitas"
                                 style="-fx-background-color:#EF4444;-fx-text-fill:white;
                                        -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
@@ -240,7 +244,7 @@
                 <!-- Form fasilitas -->
                 <VBox prefWidth="280" minWidth="240" spacing="10" styleClass="form-card">
                     <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
-                    <Label styleClass="form-card-title" text="Form Fasilitas" />
+                    <Label fx:id="lblFasilitasFormTitle" styleClass="form-card-title" text="Form Fasilitas" />
 
                     <Label styleClass="input-label" text="Nama Fasilitas *" />
                     <TextField fx:id="fldFasNama" promptText="cth: Mesin Cuci Front Loading"
@@ -274,6 +278,10 @@
                         <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
                                text="💬 Keyword Chatbot" />
                         <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleTambahKeyword"
+                                style="-fx-background-color:#2563EB;-fx-text-fill:white;
+                                       -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
+                                text="+ Tambah" />
                         <Button onAction="#handleHapusKeyword"
                                 style="-fx-background-color:#EF4444;-fx-text-fill:white;
                                        -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
@@ -297,7 +305,7 @@
                 <!-- Form keyword -->
                 <VBox prefWidth="280" minWidth="240" spacing="10" styleClass="form-card">
                     <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
-                    <Label styleClass="form-card-title" text="Form Keyword" />
+                    <Label fx:id="lblKeywordsFormTitle" styleClass="form-card-title" text="Form Keyword" />
 
                     <Label styleClass="input-label" text="Keyword *" />
                     <TextField fx:id="fldKwKeyword" promptText="cth: jam buka"

@@ -64,6 +64,7 @@
                     <Button onAction="#handleQrHarga"    styleClass="qr-btn" text="💰 Harga" />
                     <Button onAction="#handleQrJam"      styleClass="qr-btn" text="🕐 Jam Buka" />
                     <Button onAction="#handleQrLokasi"   styleClass="qr-btn" text="📍 Lokasi" />
+                    <Button onAction="#handleQrFasilitas" styleClass="qr-btn" text="✨ Fasilitas" />
                     <Button onAction="#handleQrPesan"    styleClass="qr-btn"
                             style="-fx-background-color:#10B981;-fx-text-fill:white;"
                             text="🛒 Pesan" />
