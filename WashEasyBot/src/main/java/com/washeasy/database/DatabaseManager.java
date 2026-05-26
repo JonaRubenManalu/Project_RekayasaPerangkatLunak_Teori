@@ -1,10 +1,6 @@
 package com.washeasy.database;
 
 import java.sql.*;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 public class DatabaseManager {
 
@@ -71,7 +67,6 @@ public class DatabaseManager {
             );
         """;
 
-        // [ADDED] Tabel history untuk menyimpan pesanan dari chatbot ordering
         String sqlHistory = """
             CREATE TABLE IF NOT EXISTS history (
                 id                  INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,8 +81,6 @@ public class DatabaseManager {
             );
         """;
 
-<<<<<<< Updated upstream
-=======
         // [PERBAIKAN] Menambahkan kolom is_active agar sesuai dengan query ChatbotEngine
         String sqlKeywords = """
             CREATE TABLE IF NOT EXISTS keywords (
@@ -120,12 +113,14 @@ public class DatabaseManager {
             );
         """;
 
->>>>>>> Stashed changes
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sqlServices);
             stmt.execute(sqlUsers);
             stmt.execute(sqlChatLogs);
-            stmt.execute(sqlHistory); // [ADDED] buat tabel history pesanan
+            stmt.execute(sqlHistory);
+            stmt.execute(sqlKeywords);
+            stmt.execute(sqlInfoKedai);
+            stmt.execute(sqlFasilitas);
             System.out.println("[DB] Tabel berhasil disiapkan.");
         } catch (SQLException e) {
             System.err.println("[DB] Gagal membuat tabel: " + e.getMessage());
@@ -134,8 +129,6 @@ public class DatabaseManager {
         migrateHistoryColumns();
     }
 
-<<<<<<< Updated upstream
-=======
     private void migrateHistoryColumns() {
         try (Statement stmt = connection.createStatement()) {
             try {
@@ -151,7 +144,6 @@ public class DatabaseManager {
         }
     }
 
->>>>>>> Stashed changes
     /** Isi data awal jika tabel masih kosong */
     private void seedData() {
         try {
@@ -166,24 +158,22 @@ public class DatabaseManager {
             ResultSet rsSvc = query("SELECT COUNT(*) FROM services");
             if (rsSvc.next() && rsSvc.getInt(1) == 0) {
                 String[][] data = {
-                    {"Laundry Reguler",  "Pencucian pakaian biasa dengan proses standar",         "7000",  "kg",     "2-3 hari"},
-                    {"Laundry Express",  "Pencucian dengan proses lebih cepat dari reguler",      "10000", "kg",     "1 hari"},
-                    {"Laundry Kilat",    "Layanan super cepat untuk kebutuhan mendesak",          "15000", "kg",     "6 jam"},
-                    {"Cuci + Setrika",   "Pakaian dicuci dan disetrika hingga rapi",              "8000",  "kg",     "2-3 hari"},
-                    {"Setrika Saja",     "Hanya layanan penyetrikaan",                            "5000",  "kg",     "1-2 hari"},
-                    {"Laundry Bed Cover","Pencucian khusus untuk bed cover",                      "25000", "pcs",    "2-3 hari"},
-                    {"Laundry Sepatu",   "Pencucian sepatu dengan teknik khusus",                 "30000", "pasang", "2-3 hari"},
+                        {"Laundry Reguler",  "Pencucian pakaian biasa dengan proses standar",         "7000",  "kg",     "2-3 hari"},
+                        {"Laundry Express",  "Pencucian dengan proses lebih cepat dari reguler",      "10000", "kg",     "1 hari"},
+                        {"Laundry Kilat",    "Layanan super cepat untuk kebutuhan mendesak",          "15000", "kg",     "6 jam"},
+                        {"Cuci + Setrika",   "Pakaian dicuci dan disetrika hingga rapi",              "8000",  "kg",     "2-3 hari"},
+                        {"Setrika Saja",     "Hanya layanan penyetrikaan",                            "5000",  "kg",     "1-2 hari"},
+                        {"Laundry Bed Cover","Pencucian khusus untuk bed cover",                      "25000", "pcs",    "2-3 hari"},
+                        {"Laundry Sepatu",   "Pencucian sepatu dengan teknik khusus",                 "30000", "pasang", "2-3 hari"},
                 };
                 for (String[] row : data) {
                     execute(String.format(
-                        "INSERT INTO services(nama_layanan,deskripsi,harga,satuan_harga,estimasi_waktu) VALUES('%s','%s',%s,'%s','%s')",
-                        row[0], row[1], row[2], row[3], row[4]
+                            "INSERT INTO services(nama_layanan,deskripsi,harga,satuan_harga,estimasi_waktu) VALUES('%s','%s',%s,'%s','%s')",
+                            row[0], row[1], row[2], row[3], row[4]
                     ));
                 }
                 System.out.println("[DB] Data awal layanan berhasil di-seed.");
             }
-<<<<<<< Updated upstream
-=======
 
             // [PERBAIKAN] Seed info_kedai disesuaikan menjadi format Key-Value yang dibutuhkan ChatbotEngine
             ResultSet rsInfo = query("SELECT COUNT(*) FROM info_kedai");
@@ -267,21 +257,17 @@ public class DatabaseManager {
                 }
                 System.out.println("[DB] Data awal keywords berhasil di-seed.");
             }
->>>>>>> Stashed changes
         } catch (SQLException e) {
             System.err.println("[DB] Gagal seed data: " + e.getMessage());
         }
     }
 
-<<<<<<< Updated upstream
-=======
     /** [PERBAIKAN] Menambahkan method getAllFasilitas() yang dicari ChatbotEngine */
     public ResultSet getAllFasilitas() throws SQLException {
         String sql = "SELECT nama_fasilitas, keterangan FROM fasilitas";
         return query(sql);
     }
 
->>>>>>> Stashed changes
     /** Eksekusi query SELECT → kembalikan ResultSet */
     public ResultSet query(String sql) throws SQLException {
         Statement stmt = connection.createStatement();
@@ -311,8 +297,4 @@ public class DatabaseManager {
     }
 
     public Connection getConnection() { return connection; }
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
