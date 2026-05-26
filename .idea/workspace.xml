@@ -6,16 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/AdminDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/UserDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/UserDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/AdminDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/UserDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/UserDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/AdminDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/washeasy.db" beforeDir="false" afterPath="$PROJECT_DIR$/washeasy.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,10 +39,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "tambahanfitur",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/71241126_Project PROGWEB/Project_RekayasaPerangkatLunak_Teori",
+    "last_opened_file_path": "D:/prrpll/Project_RekayasaPerangkatLunak_Teori",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -72,7 +63,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
       </set>
     </attachedChunks>
   </component>

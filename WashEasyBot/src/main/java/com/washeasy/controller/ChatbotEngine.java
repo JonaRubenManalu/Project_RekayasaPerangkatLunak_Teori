@@ -95,7 +95,7 @@ public class ChatbotEngine {
             return Category.LAYANAN;
         if (containsAny(low, "harga","berapa","biaya","tarif","cost","per kilo","per kg"))
             return Category.HARGA;
-        if (containsAny(low, "estimasi","lama","kapan","selesai","berapa hari","berapa jam","waktu pengerjaan"))
+        if (containsAny(low, "estimasi","lama","kapan","selesai","berapa hari","berapa jam","waktu pengerjaan","berap lama"))
             return Category.ESTIMASI;
         if (containsAny(low, "jam","buka","tutup","operasional","waktu buka","jam operasional"))
             return Category.JAM_OPERASIONAL;
@@ -105,7 +105,7 @@ public class ChatbotEngine {
             return Category.MINIMAL_BERAT;
         if (containsAny(low, "antar","jemput","delivery","pickup","kirim","ambil ke","anter"))
             return Category.ANTAR_JEMPUT;
-        if (containsAny(low, "cara","bagaimana","gimana","prosedur","langkah","caranya"))
+        if (containsAny(low, "cara","bagaimana","gimana","prosedur","langkah","caranya","gimane","py"))
             return Category.CARA_LAUNDRY;
         if (containsAny(low, "fasilitas","fasilitas apa","ada apa saja"))
             return Category.FASILITAS;
@@ -141,12 +141,20 @@ public class ChatbotEngine {
     private String handleLayanan() {
         unrecognizedCount = 0;
         ObservableList<Service> services = serviceController.getAllServices();
-        StringBuilder sb = new StringBuilder("Berikut daftar layanan laundry kami:\n\n");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nDAFTAR LAYANAN LAUNDRY\n");
+        sb.append("\n");
+
         for (Service s : services) {
-            sb.append(String.format("%-20s | %-18s | %s%n",
-                    s.getNamaLayanan(), s.getFormattedHarga(), s.getEstimasiWaktu()));
+            sb.append("• ").append(s.getNamaLayanan()).append("\n");
+            sb.append("  Harga    : ").append(s.getFormattedHarga()).append("\n");
+            sb.append("  Estimasi : ").append(s.getEstimasiWaktu()).append("\n");
+            sb.append("\n");
         }
-        sb.append("\nMinimal laundry 1 kg. Jika kurang, dikenakan harga minimum Rp 21.000.");
+
+        sb.append("★ Minimal laundry 1 kg. Jika kurang, dikenakan harga minimum Rp 21.000\n");
+
         return sb.toString();
     }
 
@@ -202,27 +210,34 @@ public class ChatbotEngine {
         try {
             ResultSet rs = db.query("SELECT jam_buka, jam_tutup FROM info_kedai LIMIT 1");
             if (rs.next()) {
-                String buka  = rs.getString("jam_buka");
+                String buka = rs.getString("jam_buka");
                 String tutup = rs.getString("jam_tutup");
-                return "Jam Operasional WashEasy Laundry:\n\n" +
-                        "• Senin – Jumat : " + buka + " – " + tutup + " WIB\n" +
-                        "• Sabtu          : " + buka + " – " + tutup + " WIB\n" +
-                        "• Minggu         : TUTUP\n\n" +
-                        "Kami melayani dengan sepenuh hati setiap harinya! ❤️";
+                return String.format("""
+                
+                Jam Operasional WashEasy Laundry:
+                
+                • Senin – Jumat : %s – %s WIB
+                • Sabtu         : %s – %s WIB
+                • Minggu        : TUTup
+                
+                Kami melayani dengan sepenuh hati setiap harinya! ❤️
+                """, buka, tutup, buka, tutup);
             }
         } catch (SQLException e) {
             System.err.println("[ChatbotEngine] Gagal baca jam dari DB: " + e.getMessage());
         }
+
         // Fallback hardcode
         return """
-            Jam Operasional WashEasy Laundry:
-            
-            • Senin – Jumat : 09.00 – 22.00 WIB
-            • Sabtu          : 10.00 – 22.00 WIB
-            • Minggu         : TUTUP
-            
-            Kami melayani dengan sepenuh hati setiap harinya! ❤️
-            """;
+        
+        Jam Operasional WashEasy Laundry:
+        
+        • Senin – Jumat : 09.00 – 22.00 WIB
+        • Sabtu         : 10.00 – 22.00 WIB
+        • Minggu        : TUTUP
+        
+        Kami melayani dengan sepenuh hati setiap harinya! ❤️
+        """;
     }
 
     /** [UPDATED] Lokasi — baca dari tabel info_kedai jika tersedia */
@@ -283,17 +298,45 @@ public class ChatbotEngine {
     private String handleCara() {
         unrecognizedCount = 0;
         return """
-            Cara menggunakan layanan WashEasy Laundry:
-            
-            1. Datang ke lokasi laundry kami
-            2. Serahkan pakaian kepada petugas
-            3. Petugas menimbang dan mencatat pesanan
-            4. Pilih jenis layanan yang diinginkan
-            5. Petugas memberikan struk & estimasi waktu
-            6. Pakaian dapat diambil sesuai estimasi
-            
-            Mudah dan praktis! Jika ada pertanyaan, hubungi kami. 😊
-            """;
+        Cara Menggunakan WashEasy Bot:
+        
+        1. Mulai Pesanan
+           - Ketik 'pesan' di chat
+           - Atau klik tombol Pesan
+        
+        2. Pilih Layanan
+           - Pilih dari daftar layanan yang tersedia
+           - Ketik nomor atau nama layanan
+        
+        3. Masukkan Berat
+           - Contoh: 2 (untuk 2 kg)
+           - Minimal 1 kg
+        
+        4. Pilih Metode Pengambilan
+           - 1 = Ambil Sendiri
+           - 2 = Antar ke Alamat
+        
+        5. Isi Data (jika pilih Antar)
+           - Alamat lengkap
+           - Nomor HP aktif
+        
+        6. Konfirmasi Pesanan
+           - Ketik 'Ya' untuk konfirmasi
+           - Ketik 'Tidak' untuk batal
+        
+        Setelah Pesanan Dibuat:
+        - Status awal: Sedang Diproses
+        - Cek status di menu Tracking Pesanan
+        - Admin akan mengubah status menjadi Siap Diambil
+        
+        Contoh Pertanyaan:
+        - daftar layanan
+        - harga laundry reguler
+        - jam buka
+        - lokasi
+        
+        Terima kasih telah menggunakan WashEasy Bot.
+        """;
     }
 
     /** [NEW] Fasilitas — baca dari tabel fasilitas di DB */
