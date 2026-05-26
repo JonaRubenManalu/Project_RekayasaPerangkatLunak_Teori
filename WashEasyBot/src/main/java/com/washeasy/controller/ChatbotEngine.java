@@ -21,7 +21,7 @@ public class ChatbotEngine {
     private enum Category {
         SALAM, LAYANAN, HARGA, ESTIMASI, JAM_OPERASIONAL,
         LOKASI, MINIMAL_BERAT, ANTAR_JEMPUT, CARA_LAUNDRY,
-        FASILITAS,   // [NEW] kategori fasilitas
+        FASILITAS,TERIMAKASIH,  // [NEW] kategori fasilitas
         TIDAK_DIKENALI
     }
 
@@ -41,6 +41,7 @@ public class ChatbotEngine {
         switch (cat) {
             case SALAM             -> response = handleSalam();
             case LAYANAN           -> response = handleLayanan();
+            case TERIMAKASIH      -> response = handleTerimaKasih();
             case HARGA             -> response = handleHarga(input);
             case ESTIMASI          -> response = handleEstimasi(input);
             case JAM_OPERASIONAL   -> response = handleJam();
@@ -89,8 +90,10 @@ public class ChatbotEngine {
         }
 
         // -- Fallback hardcode (jika DB kosong atau gagal) --
-        if (containsAny(low, "halo","hai","hi","selamat","pagi","siang","malam","hello","hey","assalamualaikum"))
+        if (containsAny(low, "halo","hai","hi","selamat","pagi","siang","malam","hello","hey","assalamualaikum","shalom"))
             return Category.SALAM;
+        if (containsAny(low, "terima kasih", "makasih", "thanks", "thank you", "trima kasih", "terimakasih", "thx", "tq","tidak ada","nggak ada","nggak","oke"))
+            return Category.TERIMAKASIH;
         if (containsAny(low, "layanan","menu","daftar","tersedia","apa saja","ada apa","pilihan","jenis"))
             return Category.LAYANAN;
         if (containsAny(low, "harga","berapa","biaya","tarif","cost","per kilo","per kg"))
@@ -136,6 +139,17 @@ public class ChatbotEngine {
             
             Silakan ketik pertanyaan Anda! 
             """;
+    }
+    private String handleTerimaKasih() {
+        unrecognizedCount = 0;
+        return """
+        
+        Senang bisa membantu Anda! 😊
+        
+        Jika ada pertanyaan lain seputar laundry, jangan ragu bertanya ya!
+ 
+        Terima kasih telah menggunakan WashEasy Bot! ❤️
+        """;
     }
 
     private String handleLayanan() {
@@ -232,9 +246,9 @@ public class ChatbotEngine {
         
         Jam Operasional WashEasy Laundry:
         
-        • Senin – Jumat : 09.00 – 22.00 WIB
-        • Sabtu         : 10.00 – 22.00 WIB
-        • Minggu        : TUTUP
+        Senin – Jumat : 09.00 – 22.00 WIB
+        Sabtu         : 10.00 – 22.00 WIB
+        Minggu        : TUTUP
         
         Kami melayani dengan sepenuh hati setiap harinya! ❤️
         """;
@@ -374,8 +388,6 @@ public class ChatbotEngine {
             
             ✅ Setrika Uap Profesional
                Setrika uap berteknologi tinggi untuk hasil terbaik
-            
-            ✅ Area Parkir & WiFi Gratis
             
             ✅ Layanan Antar Jemput
                Minimal 5 kg, radius ± 5 km
