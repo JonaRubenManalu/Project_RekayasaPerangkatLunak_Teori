@@ -21,7 +21,7 @@ public class ChatbotEngine {
     private enum Category {
         SALAM, LAYANAN, HARGA, ESTIMASI, JAM_OPERASIONAL,
         LOKASI, MINIMAL_BERAT, ANTAR_JEMPUT, CARA_LAUNDRY,
-        FASILITAS,TERIMAKASIH,  // [NEW] kategori fasilitas
+        FASILITAS,TERIMAKASIH,FAQ,  // [NEW] kategori fasilitas
         TIDAK_DIKENALI
     }
 
@@ -49,7 +49,8 @@ public class ChatbotEngine {
             case MINIMAL_BERAT     -> response = handleMinimal();
             case ANTAR_JEMPUT      -> response = handleAntarJemput();
             case CARA_LAUNDRY      -> response = handleCara();
-            case FASILITAS         -> response = handleFasilitas();   // [NEW]
+            case FASILITAS         -> response = handleFasilitas();
+            case FAQ               -> response = handleFAQ(input);
             default                -> response = handleTidakDikenali();
         }
 
@@ -112,6 +113,16 @@ public class ChatbotEngine {
             return Category.CARA_LAUNDRY;
         if (containsAny(low, "fasilitas","fasilitas apa","ada apa saja"))
             return Category.FASILITAS;
+        // Tambahkan sebelum return Category.TIDAK_DIKENALI
+        if (containsAny(low,
+                "cuci kering", "dry clean", "dryclean",
+                "berat minimal bed cover", "bed cover minimal",
+                "sepatu bisa dicuci", "cuci sepatu", "laundry sepatu",
+                "karpet", "cuci karpet", "laundry karpet",
+                "jaket", "cuci jaket", "laundry jaket",
+                "warna pudar", "luntur", "aman", "catat",
+                "rapi", "setrika", "lipat"))
+            return Category.FAQ;
 
         return Category.TIDAK_DIKENALI;
     }
@@ -415,6 +426,155 @@ public class ChatbotEngine {
             unrecognizedCount = 0;
         }
         return base;
+    }
+    private String handleFAQ(String input) {
+        unrecognizedCount = 0;
+        String low = input.toLowerCase();
+
+        // Cuci Kering / Dry Clean
+        if (containsAny(low, "cuci kering", "dry clean", "dryclean")) {
+            return """
+            ❓ *Apa itu Cuci Kering?*
+            
+            Cuci kering (dry clean) adalah metode pencucian menggunakan bahan kimia khusus
+            tanpa air, cocok untuk pakaian berbahan:
+            • Wol, sutra, satin
+            • Jas, blazer, coat
+            • Pakaian dengan aksesoris atau lem
+            • Bahan yang mudah melar atau menyusut
+            
+            ⚠️ Untuk layanan dry clean, silakan datang langsung ke outlet kami.
+            """;
+        }
+
+        // Berat minimal Bed Cover
+        if (containsAny(low, "berat minimal bed cover", "bed cover minimal", "minimal bed cover")) {
+            return """
+            ❓ *Berat Minimal Bed Cover?*
+            
+            Untuk layanan Laundry Bed Cover:
+            • Minimal 1 pcs (tidak dihitung per kg)
+            • Harga tetap Rp 25.000/pcs
+            • Estimasi 2-3 hari
+            
+            📌 Bed cover dengan ukuran besar (king size) dikenakan biaya tambahan Rp 5.000.
+            """;
+        }
+
+        // Sepatu bisa dicuci?
+        if (containsAny(low, "sepatu bisa dicuci", "cuci sepatu", "laundry sepatu")) {
+            return """
+            ❓ *Apakah Sepatu Bisa Dicuci?*
+            
+            Bisa! ✅ WashEasy memiliki layanan *Laundry Sepatu* khusus:
+            
+            📍 Harga      : Rp 30.000/pasang
+            ⏱️ Estimasi   : 2-3 hari
+            👟 Jenis      : Sneakers, casual shoes, sport shoes
+            
+            ⚠️ Tidak menerima sepatu kulit, high heels, atau sepatu dengan aksesoris mudah lepas.
+            
+            💡 Tips: Lepaskan tali sepatu agar hasil lebih bersih!
+            """;
+        }
+
+        // Karpet
+        if (containsAny(low, "karpet", "cuci karpet", "laundry karpet")) {
+            return """
+            ❓ *Apakah Bisa Laundry Karpet?*
+            
+            Bisa! ✅ WashEasy menerima cuci karpet dengan ketentuan:
+            
+            • Minimal 1 pcs
+            • Harga tergantung ukuran (Rp 50.000 - Rp 150.000)
+            • Estimasi 3-5 hari
+            • Harap datang langsung ke outlet untuk pengecekan bahan
+            
+            📞 Hubungi kami di 021-1234-5678 untuk info lebih lanjut.
+            """;
+        }
+
+        // Jaket
+        if (containsAny(low, "jaket", "cuci jaket", "laundry jaket")) {
+            return """
+            ❓ *Laundry Jaket*
+            
+            Jaket bisa dicuci dengan layanan reguler, kecuali:
+            • Jaket kulit → tidak bisa dicuci
+            • Jaket bulu → dry clean recommended
+            • Jaket down feather → disarankan dry clean
+            
+            Harga mengikuti layanan reguler (Rp 7.000/kg) atau express sesuai pilihan.
+            """;
+        }
+
+        // Warna pudar / luntur
+        if (containsAny(low, "warna pudar", "luntur", "aman", "catat")) {
+            return """
+            ❓ *Apakah Pakaian Aman Tidak Luntur?*
+            
+            ✅ WashEasy menggunakan teknologi mesin modern dengan pengaturan suhu air:
+            
+            • Pakaian warna gelap dipisahkan dari warna terang
+            • Menggunakan deterjen yang aman untuk warna
+            • Ada layanan khusus untuk pakaian rawan luntur
+            
+            📌 Saran: Pisahkan pakaian putih dan berwarna sebelum diserahkan.
+            """;
+        }
+
+        // Setrika / Rapi
+        if (containsAny(low, "rapi", "setrika", "lipat")) {
+            return """
+                    ❓ *Apakah Pakaian Disetrika dan Dilipat?*
+                    
+                    Ya! ✅ Untuk layanan:
+                    • Laundry Reguler/Express/Kilat → sudah termasuk setrika dan lipat
+                    • Setrika Saja → khusus setrika tanpa cuci
+                    
+                    Hasil pakaian:
+                    ✓ Rapi
+                    ✓ Wangi
+                    ✓ Siap pakai
+                    
+                    📌 Jika ingin lipat khusus (misal: seragam), bisa request di keterangan.
+                    """;
+
+        }
+        if (containsAny(low, "karpet", "cuci karpet", "laundry karpet", "karpet berapa")) {
+            return """
+            ❓ *Laundry Karpet*
+            
+            Bisa! ✅ WashEasy menerima cuci karpet dengan ketentuan:
+            
+            • Minimal 1 pcs
+            • Harga tergantung ukuran:
+              - Ukuran kecil (2x3m) : Rp 50.000
+              - Ukuran sedang (3x4m): Rp 100.000
+              - Ukuran besar (4x6m) : Rp 150.000
+            • Estimasi 3-5 hari
+            • Harap datang langsung ke outlet untuk pengecekan bahan
+            
+            📞 Hubungi kami di 021-1234-5678 untuk info lebih lanjut.
+            """;
+        }
+
+        // Default FAQ jika tidak ada keyword spesifik
+        return """
+        ❓ *Pertanyaan Umum (FAQ)*
+        
+        Silakan tanyakan hal-hal berikut:
+        
+        • "cuci kering" - Penjelasan layanan dry clean
+        • "berat minimal bed cover" - Ketentuan bed cover
+        • "sepatu bisa dicuci?" - Info laundry sepatu
+        • "cuci karpet" - Info laundry karpet
+        • "cuci jaket" - Info laundry jaket
+        • "apakah aman?" - Keamanan warna pakaian
+        • "setrika" - Info setrika dan lipat
+        
+        Atau hubungi admin kami di 📞 021-1234-5678
+        """;
     }
 
     /** Simpan percakapan ke tabel chat_logs */
