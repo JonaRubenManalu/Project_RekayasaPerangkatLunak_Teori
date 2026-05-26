@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -152,13 +153,15 @@
 
                 <TableView fx:id="tblPesanan" VBox.vgrow="ALWAYS" styleClass="data-table">
                     <columns>
-                        <TableColumn fx:id="colPId"      prefWidth="55"  text="ID" />
-                        <TableColumn fx:id="colPUser"    prefWidth="150" text="Customer" />
-                        <TableColumn fx:id="colPLayanan" prefWidth="200" text="Layanan" />
-                        <TableColumn fx:id="colPBerat"   prefWidth="100" text="Berat/Jml" />
-                        <TableColumn fx:id="colPTotal"   prefWidth="140" text="Total Harga" />
-                        <TableColumn fx:id="colPStatus"  prefWidth="150" text="Status" />
-                        <TableColumn fx:id="colPTanggal" prefWidth="170" text="Tanggal Pesan" />
+                        <TableColumn fx:id="colPId"      prefWidth="50"  text="ID" />
+                        <TableColumn fx:id="colPUser"    prefWidth="120" text="Customer" />
+                        <TableColumn fx:id="colPLayanan" prefWidth="160" text="Layanan" />
+                        <TableColumn fx:id="colPBerat"   prefWidth="90"  text="Berat/Jml" />
+                        <TableColumn fx:id="colPTotal"   prefWidth="120" text="Total Harga" />
+                        <TableColumn fx:id="colPStatus"  prefWidth="130" text="Status" />
+                        <TableColumn fx:id="colPMetode"  prefWidth="130" text="Metode Ambil" />
+                        <TableColumn fx:id="colPAlamat"  prefWidth="180" text="Alamat" />
+                        <TableColumn fx:id="colPTanggal" prefWidth="160" text="Tanggal Pesan" />
                     </columns>
                     <placeholder>
                         <Label text="Belum ada pesanan masuk." />
@@ -171,6 +174,153 @@
                 <Label style="-fx-text-fill:#64748B;-fx-font-size:11px;"
                        text="Klik baris pesanan, lalu tekan 'Tandai Siap Diambil' untuk mengubah status." />
             </VBox>
+        </Tab>
+
+        <!-- ════ TAB 3 [NEW]: INFO KEDAI ════ -->
+        <Tab text="🏪 Info Kedai">
+            <VBox spacing="14" style="-fx-padding:16 0 0 0;" VBox.vgrow="ALWAYS">
+                <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
+                       text="🏪 Kelola Info Kedai (Jam Operasional &amp; Lokasi)" />
+                <Label style="-fx-text-fill:#64748B;-fx-font-size:11px;"
+                       text="Data ini ditampilkan secara dinamis oleh chatbot — bukan hardcode." />
+
+                <HBox spacing="16">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label styleClass="input-label" text="Jam Buka *" />
+                        <TextField fx:id="fldJamBuka" promptText="cth: 09:00" styleClass="form-input" />
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label styleClass="input-label" text="Jam Tutup *" />
+                        <TextField fx:id="fldJamTutup" promptText="cth: 22:00" styleClass="form-input" />
+                    </VBox>
+                </HBox>
+
+                <Label styleClass="input-label" text="Lokasi / Alamat Kedai *" />
+                <TextArea fx:id="fldLokasi" prefRowCount="3"
+                          promptText="cth: Jl. Dr. Wahidin No. 5, Kotabaru, Yogyakarta"
+                          styleClass="form-input" wrapText="true" />
+
+                <HBox spacing="8">
+                    <Button onAction="#handleSimpanInfoKedai"
+                            style="-fx-background-color:#2563EB;-fx-text-fill:white;
+                                   -fx-background-radius:6px;-fx-padding:8 20;-fx-font-weight:bold;"
+                            text="💾 Simpan Info Kedai" />
+                </HBox>
+                <Label fx:id="lblInfoKedaiStatus" style="-fx-font-size:12px;" text="" />
+            </VBox>
+        </Tab>
+
+        <!-- ════ TAB 4 [NEW]: FASILITAS ════ -->
+        <Tab text="✨ Fasilitas">
+            <HBox spacing="16" style="-fx-padding:12 0 0 0;">
+
+                <!-- Tabel fasilitas -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
+                               text="✨ Daftar Fasilitas" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleHapusFasilitas"
+                                style="-fx-background-color:#EF4444;-fx-text-fill:white;
+                                       -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
+                                text="Hapus" />
+                    </HBox>
+                    <TableView fx:id="tblFasilitas" styleClass="data-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colFasId"   prefWidth="50"  text="ID" />
+                            <TableColumn fx:id="colFasNama" prefWidth="200" text="Nama Fasilitas" />
+                            <TableColumn fx:id="colFasKet"  prefWidth="320" text="Keterangan" />
+                        </columns>
+                        <placeholder>
+                            <Label text="Belum ada data fasilitas." />
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <!-- Form fasilitas -->
+                <VBox prefWidth="280" minWidth="240" spacing="10" styleClass="form-card">
+                    <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
+                    <Label styleClass="form-card-title" text="Form Fasilitas" />
+
+                    <Label styleClass="input-label" text="Nama Fasilitas *" />
+                    <TextField fx:id="fldFasNama" promptText="cth: Mesin Cuci Front Loading"
+                               styleClass="form-input" />
+
+                    <Label styleClass="input-label" text="Keterangan" />
+                    <TextField fx:id="fldFasKet" promptText="Deskripsi fasilitas"
+                               styleClass="form-input" />
+
+                    <Label fx:id="lblFasilitasStatus" styleClass="status-label" text="" wrapText="true" />
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <HBox spacing="8">
+                        <Button maxWidth="Infinity" onAction="#handleBatalFasilitas"
+                                styleClass="btn-secondary" text="Batal" HBox.hgrow="ALWAYS" />
+                        <Button maxWidth="Infinity" onAction="#handleSimpanFasilitas"
+                                styleClass="btn-primary" text="Simpan" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </VBox>
+
+            </HBox>
+        </Tab>
+
+        <!-- ════ TAB 5 [NEW]: TEMPLATE PERTANYAAN (KEYWORDS) ════ -->
+        <Tab text="💬 Template Pertanyaan">
+            <HBox spacing="16" style="-fx-padding:12 0 0 0;">
+
+                <!-- Tabel keywords -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1E293B;"
+                               text="💬 Keyword Chatbot" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleHapusKeyword"
+                                style="-fx-background-color:#EF4444;-fx-text-fill:white;
+                                       -fx-background-radius:6px;-fx-padding:6 14;-fx-font-weight:bold;"
+                                text="Hapus" />
+                    </HBox>
+                    <Label style="-fx-text-fill:#64748B;-fx-font-size:11px;"
+                           text="Keyword ini digunakan chatbot untuk mengenali pertanyaan user secara dinamis dari database." />
+                    <TableView fx:id="tblKeywords" styleClass="data-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colKwId"       prefWidth="50"  text="ID" />
+                            <TableColumn fx:id="colKwKeyword"  prefWidth="200" text="Keyword" />
+                            <TableColumn fx:id="colKwCategory" prefWidth="170" text="Kategori" />
+                            <TableColumn fx:id="colKwPriority" prefWidth="80"  text="Prioritas" />
+                        </columns>
+                        <placeholder>
+                            <Label text="Belum ada keyword." />
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <!-- Form keyword -->
+                <VBox prefWidth="280" minWidth="240" spacing="10" styleClass="form-card">
+                    <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
+                    <Label styleClass="form-card-title" text="Form Keyword" />
+
+                    <Label styleClass="input-label" text="Keyword *" />
+                    <TextField fx:id="fldKwKeyword" promptText="cth: jam buka"
+                               styleClass="form-input" />
+
+                    <Label styleClass="input-label" text="Kategori *" />
+                    <ComboBox fx:id="cmbKwCategory" maxWidth="Infinity" styleClass="form-input" />
+
+                    <Label styleClass="input-label" text="Prioritas (1–10)" />
+                    <TextField fx:id="fldKwPriority" promptText="1" styleClass="form-input" />
+
+                    <Label fx:id="lblKeywordsStatus" styleClass="status-label" text="" wrapText="true" />
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <HBox spacing="8">
+                        <Button maxWidth="Infinity" onAction="#handleBatalKeyword"
+                                styleClass="btn-secondary" text="Batal" HBox.hgrow="ALWAYS" />
+                        <Button maxWidth="Infinity" onAction="#handleSimpanKeyword"
+                                styleClass="btn-primary" text="Simpan" HBox.hgrow="ALWAYS" />
+                    </HBox>
+                </VBox>
+
+            </HBox>
         </Tab>
 
     </TabPane>

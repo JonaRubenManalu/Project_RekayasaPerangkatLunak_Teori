@@ -6,459 +6,363 @@ import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ChatbotEngine {
 
     private final ServiceController serviceController;
     private final DatabaseManager   db;
     private long   lastResponseTime;
-    private int    unrecognizedCount = 0;
+    private int    unrecognizedCount = 0;  // untuk UC-08: hitung berapa kali gagal
 
+    // Kategori pertanyaan
     private enum Category {
         SALAM, LAYANAN, HARGA, ESTIMASI, JAM_OPERASIONAL,
-        LOKASI, MINIMAL_BERAT, ANTAR_JEMPUT, CARA_LAUNDRY, TIDAK_DIKENALI
+        LOKASI, MINIMAL_BERAT, ANTAR_JEMPUT, CARA_LAUNDRY,
+        FASILITAS,   // [NEW] kategori fasilitas
+        TIDAK_DIKENALI
     }
-
-    private Map<String, Integer> keywordPriorityMap = new HashMap<>();
-    private Map<String, String> keywordToCategoryMap = new HashMap<>();
-    private long lastKeywordRefresh = 0;
-    private static final long CACHE_TTL = 60000;
 
     public ChatbotEngine() {
         this.serviceController = new ServiceController();
-        this.db = DatabaseManager.getInstance();
-        refreshKeywordCache();
+        this.db                = DatabaseManager.getInstance();
     }
 
-    private void refreshKeywordCache() {
-        keywordPriorityMap.clear();
-        keywordToCategoryMap.clear();
-        try {
-            ResultSet rs = db.query(
-                    "SELECT keyword, category, priority FROM keywords WHERE is_active = 1 ORDER BY priority DESC"
-            );
-            while (rs.next()) {
-                String keyword = rs.getString("keyword").toLowerCase();
-                String category = rs.getString("category");
-                int priority = rs.getInt("priority");
-
-                if (!keywordPriorityMap.containsKey(keyword) ||
-                        keywordPriorityMap.get(keyword) < priority) {
-                    keywordPriorityMap.put(keyword, priority);
-                    keywordToCategoryMap.put(keyword, category);
-                }
-            }
-            System.out.println("[ChatbotEngine] Keyword cache refreshed: " + keywordPriorityMap.size() + " keywords");
-            lastKeywordRefresh = System.currentTimeMillis();
-        } catch (SQLException e) {
-            System.err.println("[ChatbotEngine] Gagal refresh keyword cache: " + e.getMessage());
-        }
-    }
-
-    private void checkAndRefreshCache() {
-        if (System.currentTimeMillis() - lastKeywordRefresh > CACHE_TTL) {
-            refreshKeywordCache();
-        }
-    }
 
     public String processInput(String input) {
         long start = System.currentTimeMillis();
-        if (input == null || input.isBlank()) {
-            return "Silakan ketik pertanyaan Anda.";
-        }
+        if (input == null || input.isBlank()) return "Silakan ketik pertanyaan Anda.";
 
         String response;
-        Category cat = findCategoryDynamic(input);
-
-        System.out.println("[ChatbotEngine] Input: '" + input + "' -> Category: " + cat);
+        Category cat = findCategory(input);
 
         switch (cat) {
-            case SALAM:
-                response = handleSalam();
-                break;
-            case LAYANAN:
-                response = handleLayanan();
-                break;
-            case HARGA:
-                response = handleHarga(input);
-                break;
-            case ESTIMASI:
-                response = handleEstimasi(input);
-                break;
-            case JAM_OPERASIONAL:
-                response = handleJamOperasional();
-                break;
-            case LOKASI:
-                response = handleLokasi();
-                break;
-            case MINIMAL_BERAT:
-                response = handleMinimalBerat();
-                break;
-            case ANTAR_JEMPUT:
-                response = handleAntarJemput();
-                break;
-            case CARA_LAUNDRY:
-                response = handleCaraLaundry();
-                break;
-            default:
-                response = handleTidakDikenali();
-                break;
+            case SALAM             -> response = handleSalam();
+            case LAYANAN           -> response = handleLayanan();
+            case HARGA             -> response = handleHarga(input);
+            case ESTIMASI          -> response = handleEstimasi(input);
+            case JAM_OPERASIONAL   -> response = handleJam();
+            case LOKASI            -> response = handleLokasi();
+            case MINIMAL_BERAT     -> response = handleMinimal();
+            case ANTAR_JEMPUT      -> response = handleAntarJemput();
+            case CARA_LAUNDRY      -> response = handleCara();
+            case FASILITAS         -> response = handleFasilitas();   // [NEW]
+            default                -> response = handleTidakDikenali();
         }
 
+        // Simpan ke chat_logs
         saveChatLog(input, response, cat != Category.TIDAK_DIKENALI);
         lastResponseTime = System.currentTimeMillis() - start;
         return response;
     }
 
-    private Category findCategoryDynamic(String input) {
-        checkAndRefreshCache();
+    /**
+     * [NEW] Tentukan kategori berdasarkan keywords dari DB (dinamis).
+     * Fallback ke hardcode jika DB gagal — agar chatbot tetap berfungsi.
+     */
+    private Category findCategory(String input) {
         String low = input.toLowerCase().trim();
 
-        String bestMatchCategory = null;
-        int bestMatchPriority = -1;
-        String bestMatchKeyword = null;
-
-        for (Map.Entry<String, Integer> entry : keywordPriorityMap.entrySet()) {
-            String keyword = entry.getKey();
-            int priority = entry.getValue();
-
-            if (low.contains(keyword) && priority > bestMatchPriority) {
-                bestMatchPriority = priority;
-                bestMatchCategory = keywordToCategoryMap.get(keyword);
-                bestMatchKeyword = keyword;
+        // -- Coba keyword dinamis dari tabel keywords di DB --
+        try {
+            ResultSet rs = db.query(
+                    "SELECT keyword, category FROM keywords ORDER BY priority DESC"
+            );
+            // Kumpulkan semua keyword terlebih dahulu agar ResultSet bisa ditutup
+            List<String[]> rows = new ArrayList<>();
+            while (rs.next()) {
+                rows.add(new String[]{ rs.getString("keyword"), rs.getString("category") });
             }
+            for (String[] row : rows) {
+                String kw  = row[0].toLowerCase();
+                String cat = row[1].toUpperCase();
+                if (low.contains(kw)) {
+                    try { return Category.valueOf(cat); }
+                    catch (IllegalArgumentException ignored) { /* kategori tidak dikenal, skip */ }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("[ChatbotEngine] Gagal load keywords dari DB, pakai fallback: " + e.getMessage());
+            // Fallback ke hardcode di bawah
         }
 
-        if (bestMatchCategory != null) {
-            System.out.println("[ChatbotEngine] Matched: '" + input + "' -> " + bestMatchCategory);
-            try {
-                return Category.valueOf(bestMatchCategory);
-            } catch (IllegalArgumentException e) {
-                return Category.TIDAK_DIKENALI;
-            }
-        }
+        // -- Fallback hardcode (jika DB kosong atau gagal) --
+        if (containsAny(low, "halo","hai","hi","selamat","pagi","siang","malam","hello","hey","assalamualaikum"))
+            return Category.SALAM;
+        if (containsAny(low, "layanan","menu","daftar","tersedia","apa saja","ada apa","pilihan","jenis"))
+            return Category.LAYANAN;
+        if (containsAny(low, "harga","berapa","biaya","tarif","cost","per kilo","per kg"))
+            return Category.HARGA;
+        if (containsAny(low, "estimasi","lama","kapan","selesai","berapa hari","berapa jam","waktu pengerjaan"))
+            return Category.ESTIMASI;
+        if (containsAny(low, "jam","buka","tutup","operasional","waktu buka","jam operasional"))
+            return Category.JAM_OPERASIONAL;
+        if (containsAny(low, "lokasi","alamat","di mana","dimana","tempat","letak","jalan","google map"))
+            return Category.LOKASI;
+        if (containsAny(low, "minimal","minimum","paling sedikit","batas bawah","min"))
+            return Category.MINIMAL_BERAT;
+        if (containsAny(low, "antar","jemput","delivery","pickup","kirim","ambil ke","anter"))
+            return Category.ANTAR_JEMPUT;
+        if (containsAny(low, "cara","bagaimana","gimana","prosedur","langkah","caranya"))
+            return Category.CARA_LAUNDRY;
+        if (containsAny(low, "fasilitas","fasilitas apa","ada apa saja"))
+            return Category.FASILITAS;
 
         return Category.TIDAK_DIKENALI;
     }
 
+    /** Periksa apakah input mengandung salah satu keyword */
+    private boolean containsAny(String input, String... keywords) {
+        for (String kw : keywords) if (input.contains(kw)) return true;
+        return false;
+    }
+
+    // ── Handler per kategori ────────────────────────────────────────────────
+
     private String handleSalam() {
         unrecognizedCount = 0;
-        return "Halo! Selamat datang di WashEasy Bot!\n" +
-                "\n" +
-                "Saya siap membantu Anda mendapatkan informasi layanan laundry.\n" +
-                "\n" +
-                "Anda bisa bertanya tentang:\n" +
-                "1. Daftar layanan yang tersedia\n" +
-                "2. Harga tiap layanan\n" +
-                "3. Estimasi waktu pengerjaan\n" +
-                "4. Jam operasional\n" +
-                "5. Lokasi laundry\n" +
-                "6. Minimal berat cucian\n" +
-                "7. Layanan antar jemput\n" +
-                "8. Cara pemesanan\n" +
-                "\n" +
-                "Silakan ketik pertanyaan Anda!";
+        return """
+            Halo! 👋 Selamat datang di WashEasy Bot!
+            Saya siap membantu Anda mendapatkan informasi layanan laundry.
+            
+            Anda bisa bertanya tentang:
+            • Daftar layanan yang tersedia
+            • Harga tiap layanan
+            • Estimasi waktu pengerjaan
+            • Jam operasional & lokasi
+            • Layanan antar jemput
+            
+            Silakan ketik pertanyaan Anda! 
+            """;
     }
 
     private String handleLayanan() {
         unrecognizedCount = 0;
         ObservableList<Service> services = serviceController.getAllServices();
-
-        if (services.isEmpty()) {
-            return "Maaf, belum ada layanan yang tersedia. Silakan hubungi admin.";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Daftar Layanan Laundry Kami:\n");
-        sb.append("\n");
-
+        StringBuilder sb = new StringBuilder("Berikut daftar layanan laundry kami:\n\n");
         for (Service s : services) {
-            sb.append("- ").append(s.getNamaLayanan()).append("\n");
-            sb.append("  Harga: ").append(s.getFormattedHarga()).append("\n");
-            sb.append("  Estimasi: ").append(s.getEstimasiWaktu()).append("\n");
-            sb.append("\n");
+            sb.append(String.format("%-20s | %-18s | %s%n",
+                    s.getNamaLayanan(), s.getFormattedHarga(), s.getEstimasiWaktu()));
         }
-
-        String minBerat = getInfoFromDB("minimal_berat");
-        String minHarga = getInfoFromDB("harga_minimum");
-        if (minBerat != null && minHarga != null) {
-            sb.append("Catatan: Minimal laundry ").append(minBerat);
-            sb.append(" (dikenakan harga minimum ").append(minHarga).append(" jika kurang)");
-        }
-
+        sb.append("\nMinimal laundry 1 kg. Jika kurang, dikenakan harga minimum Rp 21.000.");
         return sb.toString();
     }
 
     private String handleHarga(String input) {
         unrecognizedCount = 0;
+        // Coba cari layanan spesifik yang disebut
         String low = input.toLowerCase();
-        ObservableList<Service> services = serviceController.getAllServices();
-
-        for (Service s : services) {
-            String namaLayanan = s.getNamaLayanan().toLowerCase();
-            if (low.contains(namaLayanan)) {
-                String minInfo = "";
-                String minBerat = getInfoFromDB("minimal_berat");
-                String minHarga = getInfoFromDB("harga_minimum");
-                if (minBerat != null && minHarga != null) {
-                    minInfo = "\n\nInformasi tambahan:\n" +
-                            "- Minimal laundry " + minBerat + "\n" +
-                            "- Jika kurang dari " + minBerat + ", harga minimum " + minHarga;
+        ObservableList<Service> all = serviceController.getAllServices();
+        for (Service s : all) {
+            String[] words = s.getNamaLayanan().toLowerCase().split(" ");
+            for (String w : words) {
+                if (w.length() > 3 && low.contains(w)) {
+                    return String.format(
+                            "Harga %s adalah %s\nEstimasi pengerjaan: %s\n\n" +
+                                    "Info tambahan:\n• Minimal laundry 1 kg\n• Jika kurang dari 1 kg, harga minimum Rp 21.000",
+                            s.getNamaLayanan(), s.getFormattedHarga(), s.getEstimasiWaktu()
+                    );
                 }
-                return "Harga " + s.getNamaLayanan() + ":\n" +
-                        "   " + s.getFormattedHarga() + "\n" +
-                        "Estimasi pengerjaan: " + s.getEstimasiWaktu() +
-                        minInfo;
             }
         }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Daftar Harga Lengkap:\n");
-        sb.append("\n");
-        for (Service s : services) {
-            sb.append("- ").append(s.getNamaLayanan()).append(" : ");
-            sb.append(s.getFormattedHarga()).append("\n");
+        // Jika tidak spesifik, tampilkan semua harga
+        StringBuilder sb = new StringBuilder("Berikut daftar harga layanan kami:\n\n");
+        for (Service s : all) {
+            sb.append(String.format("• %-20s : %s%n", s.getNamaLayanan(), s.getFormattedHarga()));
         }
-
-        String minBerat = getInfoFromDB("minimal_berat");
-        String minHarga = getInfoFromDB("harga_minimum");
-        if (minBerat != null && minHarga != null) {
-            sb.append("\nCatatan: Minimal laundry ").append(minBerat);
-            sb.append(" -> harga minimum ").append(minHarga);
-        }
-
+        sb.append("\nMinimal laundry reguler 1 kg → harga minimum Rp 21.000.");
         return sb.toString();
     }
 
     private String handleEstimasi(String input) {
         unrecognizedCount = 0;
         String low = input.toLowerCase();
-        ObservableList<Service> services = serviceController.getAllServices();
-
-        for (Service s : services) {
-            String namaLayanan = s.getNamaLayanan().toLowerCase();
-            if (low.contains(namaLayanan)) {
-                return "Estimasi waktu pengerjaan " + s.getNamaLayanan() + ":\n" +
-                        "   " + s.getEstimasiWaktu();
+        ObservableList<Service> all = serviceController.getAllServices();
+        for (Service s : all) {
+            String[] words = s.getNamaLayanan().toLowerCase().split(" ");
+            for (String w : words) {
+                if (w.length() > 3 && low.contains(w)) {
+                    return String.format("Estimasi waktu pengerjaan %s adalah: %s",
+                            s.getNamaLayanan(), s.getEstimasiWaktu());
+                }
             }
         }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Estimasi Waktu Setiap Layanan:\n");
-        sb.append("\n");
-        for (Service s : services) {
-            sb.append("- ").append(s.getNamaLayanan()).append(" : ");
-            sb.append(s.getEstimasiWaktu()).append("\n");
+        StringBuilder sb = new StringBuilder("Estimasi waktu pengerjaan setiap layanan:\n\n");
+        for (Service s : all) {
+            sb.append(String.format("• %-20s : %s%n", s.getNamaLayanan(), s.getEstimasiWaktu()));
         }
-
         return sb.toString();
     }
 
-    private String handleJamOperasional() {
+    /** [UPDATED] Jam operasional — baca dari tabel info_kedai jika tersedia */
+    private String handleJam() {
         unrecognizedCount = 0;
-
-        String seninJumat = getInfoFromDB("jam_senin_jumat");
-        String sabtu = getInfoFromDB("jam_sabtu");
-        String minggu = getInfoFromDB("jam_minggu");
-        String telepon = getInfoFromDB("telepon");
-
-        if (seninJumat != null && sabtu != null && minggu != null) {
-            StringBuilder response = new StringBuilder();
-            response.append("Jam Operasional WashEasy Laundry:\n");
-            response.append("\n");
-            response.append("Senin - Jumat : ").append(seninJumat).append("\n");
-            response.append("Sabtu         : ").append(sabtu).append("\n");
-            response.append("Minggu        : ").append(minggu).append("\n");
-            if (telepon != null) {
-                response.append("\nButuh bantuan? Hubungi: ").append(telepon);
+        try {
+            ResultSet rs = db.query("SELECT jam_buka, jam_tutup FROM info_kedai LIMIT 1");
+            if (rs.next()) {
+                String buka  = rs.getString("jam_buka");
+                String tutup = rs.getString("jam_tutup");
+                return "Jam Operasional WashEasy Laundry:\n\n" +
+                        "• Senin – Jumat : " + buka + " – " + tutup + " WIB\n" +
+                        "• Sabtu          : " + buka + " – " + tutup + " WIB\n" +
+                        "• Minggu         : TUTUP\n\n" +
+                        "Kami melayani dengan sepenuh hati setiap harinya! ❤️";
             }
-            response.append("\n\nKami siap melayani Anda dengan sepenuh hati.");
-            return response.toString();
+        } catch (SQLException e) {
+            System.err.println("[ChatbotEngine] Gagal baca jam dari DB: " + e.getMessage());
         }
-
-        return "Jam Operasional WashEasy Laundry:\n" +
-                "\n" +
-                "Senin - Jumat : 09:00 - 22:00 WIB\n" +
-                "Sabtu         : 10:00 - 22:00 WIB\n" +
-                "Minggu        : TUTUP\n" +
-                "\n" +
-                "Butuh bantuan? Hubungi: 021-1234-5678\n" +
-                "\n" +
-                "Kami siap melayani Anda dengan sepenuh hati.";
+        // Fallback hardcode
+        return """
+            Jam Operasional WashEasy Laundry:
+            
+            • Senin – Jumat : 09.00 – 22.00 WIB
+            • Sabtu          : 10.00 – 22.00 WIB
+            • Minggu         : TUTUP
+            
+            Kami melayani dengan sepenuh hati setiap harinya! ❤️
+            """;
     }
 
+    /** [UPDATED] Lokasi — baca dari tabel info_kedai jika tersedia */
     private String handleLokasi() {
         unrecognizedCount = 0;
-
-        String alamat = getInfoFromDB("lokasi_alamat");
-        String telepon = getInfoFromDB("telepon");
-        String keterangan = getInfoFromDB("lokasi_keterangan");
-
-        if (alamat != null) {
-            StringBuilder response = new StringBuilder();
-            response.append("Lokasi WashEasy Laundry:\n");
-            response.append("\n");
-            response.append(alamat).append("\n");
-            if (telepon != null) {
-                response.append("\nKontak: ").append(telepon).append("\n");
+        try {
+            ResultSet rs = db.query("SELECT lokasi FROM info_kedai LIMIT 1");
+            if (rs.next()) {
+                String lokasi = rs.getString("lokasi");
+                return "Lokasi WashEasy Laundry:\n\n" +
+                        "📍 " + lokasi + "\n\n" +
+                        "📞 Telp: 021-1234-5678\n\n" +
+                        "Kami mudah dijangkau dengan kendaraan umum maupun pribadi.";
             }
-            if (keterangan != null) {
-                response.append("\n").append(keterangan);
-            }
-            return response.toString();
+        } catch (SQLException e) {
+            System.err.println("[ChatbotEngine] Gagal baca lokasi dari DB: " + e.getMessage());
         }
-
-        return "Lokasi WashEasy Laundry:\n" +
-                "\n" +
-                "Jl. Dr. Wahidin Sudirohusodo No. 5-25\n" +
-                "Kotabaru, Gondokusuman\n" +
-                "Kota Yogyakarta, DIY 55224\n" +
-                "\n" +
-                "Telp: 021-1234-5678\n" +
-                "\n" +
-                "Mudah dijangkau dengan kendaraan umum maupun pribadi.";
+        // Fallback hardcode
+        return """
+            Lokasi WashEasy Laundry:
+            
+            📍 Jl. Dr. Wahidin Sudirohusodo No. 5-25,
+               Kotabaru, Gondokusuman,
+               Kota Yogyakarta, DIY
+            
+            📞 Telp: 021-1234-5678
+            
+            Kami mudah dijangkau dengan kendaraan umum maupun pribadi.
+            """;
     }
 
-    private String handleMinimalBerat() {
+    private String handleMinimal() {
         unrecognizedCount = 0;
-
-        String minBerat = getInfoFromDB("minimal_berat");
-        String minHarga = getInfoFromDB("harga_minimum");
-
-        if (minBerat != null && minHarga != null) {
-            return "Ketentuan Minimal Laundry\n" +
-                    "\n" +
-                    "Minimal laundry : " + minBerat + "\n" +
-                    "Harga minimum   : " + minHarga + "\n" +
-                    "\n" +
-                    "Jika pakaian Anda kurang dari " + minBerat + ",\n" +
-                    "akan tetap dikenakan harga minimum " + minHarga + ".\n" +
-                    "\n" +
-                    "Berlaku untuk semua jenis layanan.";
-        }
-
-        return "Ketentuan Minimal Laundry\n" +
-                "\n" +
-                "Minimal laundry adalah 1 kg.\n" +
-                "\n" +
-                "Jika pakaian Anda kurang dari 1 kg, akan tetap dikenakan\n" +
-                "harga minimum sebesar Rp 21.000 (setara 1 kg reguler).\n" +
-                "\n" +
-                "Berlaku untuk semua jenis layanan.";
+        return """
+            Minimal laundry adalah 1 kg.
+            
+            Jika pakaian Anda kurang dari 1 kg, akan tetap dikenakan
+            harga minimum sebesar Rp 21.000 (setara 1 kg reguler).
+            
+            Untuk layanan Express dan Kilat, kebijakan minimal sama.
+            """;
     }
 
     private String handleAntarJemput() {
         unrecognizedCount = 0;
-
-        String syarat = getInfoFromDB("antar_jemput_syarat");
-        String telepon = getInfoFromDB("telepon");
-
-        StringBuilder response = new StringBuilder();
-        response.append("Layanan Antar Jemput Tersedia!\n");
-        response.append("\n");
-        response.append("Syarat & Ketentuan:\n");
-
-        if (syarat != null) {
-            String[] syaratList = syarat.split(",");
-            for (String s : syaratList) {
-                response.append("- ").append(s.trim()).append("\n");
-            }
-        } else {
-            response.append("- Minimal laundry 5 kg\n");
-            response.append("- Area sekitar laundry (radius ± 5 km)\n");
-        }
-
-        response.append("\nUntuk informasi lebih lanjut dan penjadwalan,\n");
-        if (telepon != null) {
-            response.append("silakan hubungi kami di ").append(telepon);
-        } else {
-            response.append("silakan hubungi kami di 021-1234-5678");
-        }
-
-        return response.toString();
+        return """
+            Layanan Antar Jemput tersedia! 🛵
+            
+            Syarat:
+            • Minimal laundry 5 kg
+            • Area sekitar laundry (radius ± 5 km)
+            
+            Untuk informasi lebih lanjut dan penjadwalan,
+            silakan hubungi kami di 021-1234-5678.
+            """;
     }
 
-    private String handleCaraLaundry() {
+    private String handleCara() {
         unrecognizedCount = 0;
-
-        StringBuilder response = new StringBuilder();
-        response.append("Cara Menggunakan Layanan WashEasy Laundry:\n");
-        response.append("\n");
-        response.append("1. Datang ke lokasi laundry kami\n");
-        response.append("2. Serahkan pakaian kepada petugas\n");
-        response.append("3. Petugas menimbang dan mencatat pesanan\n");
-        response.append("4. Pilih jenis layanan yang diinginkan\n");
-        response.append("5. Petugas memberikan struk & estimasi waktu\n");
-        response.append("6. Pakaian dapat diambil sesuai estimasi\n");
-
-        try {
-            ResultSet rs = db.getAllFasilitas();
-            boolean hasFasilitas = false;
-            while (rs.next()) {
-                if (!hasFasilitas) {
-                    response.append("\nFasilitas yang kami sediakan:\n");
-                    hasFasilitas = true;
-                }
-                String nama = rs.getString("nama_fasilitas");
-                String keterangan = rs.getString("keterangan");
-                response.append("- ").append(nama);
-                if (keterangan != null && !keterangan.isEmpty()) {
-                    response.append(" : ").append(keterangan);
-                }
-                response.append("\n");
-            }
-        } catch (SQLException e) {
-            System.err.println("[ChatbotEngine] Gagal load fasilitas: " + e.getMessage());
-        }
-
-        response.append("\nMudah dan praktis! Ada pertanyaan? Hubungi kami.");
-        return response.toString();
+        return """
+            Cara menggunakan layanan WashEasy Laundry:
+            
+            1. Datang ke lokasi laundry kami
+            2. Serahkan pakaian kepada petugas
+            3. Petugas menimbang dan mencatat pesanan
+            4. Pilih jenis layanan yang diinginkan
+            5. Petugas memberikan struk & estimasi waktu
+            6. Pakaian dapat diambil sesuai estimasi
+            
+            Mudah dan praktis! Jika ada pertanyaan, hubungi kami. 😊
+            """;
     }
 
-    private String getInfoFromDB(String key) {
+    /** [NEW] Fasilitas — baca dari tabel fasilitas di DB */
+    private String handleFasilitas() {
+        unrecognizedCount = 0;
         try {
-            ResultSet rs = db.preparedQuery(
-                    "SELECT info_value FROM info_kedai WHERE info_key = ?", key
+            ResultSet rs = db.query(
+                    "SELECT nama_fasilitas, keterangan FROM fasilitas ORDER BY id_fasilitas ASC"
             );
-            if (rs.next()) {
-                return rs.getString("info_value");
+            StringBuilder sb = new StringBuilder("Fasilitas WashEasy Laundry:\n\n");
+            boolean ada = false;
+            while (rs.next()) {
+                ada = true;
+                String nama = rs.getString("nama_fasilitas");
+                String ket  = rs.getString("keterangan");
+                sb.append("✅ ").append(nama);
+                if (ket != null && !ket.isBlank()) {
+                    sb.append("\n   ").append(ket);
+                }
+                sb.append("\n\n");
             }
+            if (ada) return sb.toString().trim();
         } catch (SQLException e) {
-            System.err.println("[ChatbotEngine] Gagal ambil info_kedai '" + key + "': " + e.getMessage());
+            System.err.println("[ChatbotEngine] Gagal baca fasilitas dari DB: " + e.getMessage());
         }
-        return null;
+        // Fallback hardcode
+        return """
+            Fasilitas WashEasy Laundry:
+            
+            ✅ Mesin Cuci Front Loading
+               Mesin cuci kapasitas besar dengan teknologi hemat air
+            
+            ✅ Pengering Otomatis
+               Pengering pakaian dengan suhu yang dapat disesuaikan
+            
+            ✅ Setrika Uap Profesional
+               Setrika uap berteknologi tinggi untuk hasil terbaik
+            
+            ✅ Area Parkir & WiFi Gratis
+            
+            ✅ Layanan Antar Jemput
+               Minimal 5 kg, radius ± 5 km
+            """;
     }
 
+    /** UC-08: Pesan Tidak Dikenali */
     private String handleTidakDikenali() {
         unrecognizedCount++;
-
-        String telepon = getInfoFromDB("telepon");
-        String base = "Maaf, saya belum bisa mengenali pertanyaan tersebut.\n" +
-                "\n" +
-                "Saran pertanyaan yang bisa Anda coba:\n" +
-                "- daftar layanan\n" +
-                "- harga laundry reguler\n" +
-                "- estimasi laundry express\n" +
-                "- jam buka\n" +
-                "- lokasi laundry\n" +
-                "- minimal berat\n" +
-                "- antar jemput\n" +
-                "- pesan laundry\n";
-
+        String base = """
+            Maaf, saya belum bisa mengenali pertanyaan tersebut. 😅
+            
+            Silakan coba tanyakan tentang:
+            • "daftar layanan"
+            • "harga laundry reguler"
+            • "estimasi laundry express"
+            • "jam buka"
+            • "lokasi laundry"
+            • "minimal berat"
+            • "ada antar jemput?"
+            """;
+        // Jika sudah 3x tidak dikenali → tawarkan kontak admin
         if (unrecognizedCount >= 3) {
-            if (telepon != null) {
-                base += "\nAtau hubungi admin kami langsung di " + telepon;
-            } else {
-                base += "\nAtau hubungi admin kami langsung di 021-1234-5678";
-            }
+            base += "\nAtau hubungi admin kami langsung:\n📞 021-1234-5678";
             unrecognizedCount = 0;
         }
-
         return base;
     }
 
+    /** Simpan percakapan ke tabel chat_logs */
     private void saveChatLog(String input, String response, boolean recognized) {
         try {
             db.preparedExecute(
@@ -470,7 +374,5 @@ public class ChatbotEngine {
         }
     }
 
-    public long getLastResponseTime() {
-        return lastResponseTime;
-    }
+    public long getLastResponseTime() { return lastResponseTime; }
 }
