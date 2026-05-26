@@ -251,8 +251,8 @@ public class DatabaseManager {
                         {"cara",           "1", "CARA_LAUNDRY"},
                         {"bagaimana",      "1", "CARA_LAUNDRY"},
                         {"prosedur",       "1", "CARA_LAUNDRY"},
-                        {"fasilitas",      "1", "FASILITAS"},
-                        {"ada apa saja",   "2", "FASILITAS"},
+                        {"fasilitas",      "10", "FASILITAS"},
+                        {"ada apa saja",   "10", "FASILITAS"},
                 };
                 for (String[] kw : kwData) {
                     execute(String.format(
@@ -262,6 +262,9 @@ public class DatabaseManager {
                 }
                 System.out.println("[DB] Data awal keywords berhasil di-seed.");
             }
+            // Pastikan keyword fasilitas selalu prioritas tertinggi (fix untuk DB lama)
+            execute("UPDATE keywords SET priority=10 WHERE keyword='fasilitas' AND category='FASILITAS'");
+            execute("UPDATE keywords SET priority=10 WHERE keyword='ada apa saja' AND category='FASILITAS'");
         } catch (SQLException e) {
             System.err.println("[DB] Gagal seed data: " + e.getMessage());
         }

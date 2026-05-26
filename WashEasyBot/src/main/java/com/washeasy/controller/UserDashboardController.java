@@ -125,6 +125,8 @@ public class UserDashboardController {
     @FXML public void handleQrLokasi() { sendPreset("Lokasi laundry di mana?"); }
 
     // [ADDED] Quick reply untuk trigger alur pemesanan
+    @FXML public void handleQrFasilitas() { sendPreset("fasilitas"); }
+
     @FXML public void handleQrPesan() { sendPreset("pesan laundry sekarang"); }
 
     private void sendPreset(String text) {
@@ -178,19 +180,19 @@ public class UserDashboardController {
         ObservableList<OrderHistory> list = FXCollections.observableArrayList();
         try {
             ResultSet rs = db.preparedQuery(
-                "SELECT id, username, nama_layanan, berat_kg, total_harga, status, created_at " +
-                "FROM history WHERE username = ? ORDER BY created_at DESC",
-                currentUser.getUsername()
+                    "SELECT id, username, nama_layanan, berat_kg, total_harga, status, created_at " +
+                            "FROM history WHERE username = ? ORDER BY created_at DESC",
+                    currentUser.getUsername()
             );
             while (rs.next()) {
                 list.add(new OrderHistory(
-                    rs.getInt("id"),
-                    rs.getString("username"),
-                    rs.getString("nama_layanan"),
-                    rs.getDouble("berat_kg"),
-                    rs.getDouble("total_harga"),
-                    rs.getString("status"),
-                    rs.getString("created_at")
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("nama_layanan"),
+                        rs.getDouble("berat_kg"),
+                        rs.getDouble("total_harga"),
+                        rs.getString("status"),
+                        rs.getString("created_at")
                 ));
             }
         } catch (SQLException e) {

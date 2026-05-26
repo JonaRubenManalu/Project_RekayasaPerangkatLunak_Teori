@@ -5,20 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddbbaca2-544d-4f68-8a74-e42b2031de9d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/Fasilitas.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/InfoKedai.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/Keyword.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/AdminDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/ChatbotEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/database/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/database/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/OrderHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/model/OrderHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/UserDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/java/com/washeasy/controller/UserDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/AdminDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine$Category.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine$Category.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/ChatbotEngine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/database/DatabaseManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/database/DatabaseManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/OrderHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/model/OrderHistory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/UserDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/src/main/resources/com/washeasy/fxml/UserDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/controller/AdminDashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/WashEasyBot/target/classes/com/washeasy/fxml/AdminDashboard.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/washeasy.db" beforeDir="false" afterPath="$PROJECT_DIR$/washeasy.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,25 +41,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/71241126_Project PROGWEB/Project_RekayasaPerangkatLunak_Teori&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "tambahanfitur",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/71241126_Project PROGWEB/Project_RekayasaPerangkatLunak_Teori",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.washeasy.controller" />
@@ -91,7 +88,7 @@
       <workItem from="1778947789409" duration="974000" />
       <workItem from="1778949122219" duration="66000" />
       <workItem from="1779711718006" duration="1752000" />
-      <workItem from="1779758107179" duration="1071000" />
+      <workItem from="1779758107179" duration="2922000" />
     </task>
     <servers />
   </component>
