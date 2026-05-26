@@ -16,6 +16,8 @@ public class ChatbotController {
         IDLE,               // Tidak sedang dalam alur pemesanan
         PILIH_LAYANAN,      // Menunggu user pilih layanan
         INPUT_BERAT,        // Menunggu user masukkan berat (kg)
+        METODE_PENGAMBILAN, // [NEW] Menunggu user pilih antar/ambil sendiri
+        INPUT_ALAMAT,       // [NEW] Menunggu user masukkan alamat (jika antar)
         KONFIRMASI          // Menunggu konfirmasi ya/tidak
     }
 
@@ -25,6 +27,9 @@ public class ChatbotController {
     private String selectedSatuan;    // satuan harga
     private double inputBerat;        // berat yang dimasukkan user
     private double totalHarga;        // hasil kalkulasi
+    // [NEW] Field untuk metode pengambilan dan alamat
+    private String metodePengambilan = "Ambil Sendiri";
+    private String alamatPengiriman  = "";
 
     private final ChatbotEngine     engine;
     private final DatabaseManager   db;
@@ -57,10 +62,12 @@ public class ChatbotController {
 
         // ── Routing berdasarkan step aktif ──────────────────────
         return switch (currentStep) {
-            case IDLE          -> handleIdle(trimmed, username);
-            case PILIH_LAYANAN -> handlePilihLayanan(trimmed, username);
-            case INPUT_BERAT   -> handleInputBerat(trimmed, username);
-            case KONFIRMASI    -> handleKonfirmasi(trimmed, username);
+            case IDLE               -> handleIdle(trimmed, username);
+            case PILIH_LAYANAN      -> handlePilihLayanan(trimmed, username);
+            case INPUT_BERAT        -> handleInputBerat(trimmed, username);
+            case METODE_PENGAMBILAN -> handleMetodePengambilan(trimmed); // [NEW]
+            case INPUT_ALAMAT       -> handleInputAlamat(trimmed);       // [NEW]
+            case KONFIRMASI         -> handleKonfirmasi(trimmed, username);
         };
     }
 
@@ -167,30 +174,68 @@ public class ChatbotController {
 
         inputBerat = berat;
         totalHarga = selectedHarga * berat;
-        currentStep = Step.KONFIRMASI;
+        // [NEW] Masuk ke step pilih metode pengambilan sebelum konfirmasi
+        currentStep = Step.METODE_PENGAMBILAN;
+        return buildMetodePengambilanMessage();
+    }
 
+    // ── Step 3 [NEW]: METODE_PENGAMBILAN — antar ke lokasi atau ambil sendiri ──
+    private String handleMetodePengambilan(String input) {
+        String low = input.toLowerCase().trim();
+        if (containsAny(low, "1", "antar", "kirim", "delivery", "antar ke lokasi")) {
+            metodePengambilan = "Antar ke Lokasi";
+            currentStep = Step.INPUT_ALAMAT;
+            return "🏠 Masukkan alamat pengiriman Anda:\n" +
+                    "(Contoh: Jl. Mawar No. 5, Sleman, Yogyakarta)\n\n" +
+                    "Ketik 'batal' untuk membatalkan.";
+        } else if (containsAny(low, "2", "ambil", "ambil sendiri", "self")) {
+            metodePengambilan = "Ambil Sendiri";
+            alamatPengiriman  = "";
+            currentStep = Step.KONFIRMASI;
+            return buildKonfirmasiMessage();
+        }
+        return "❓ Pilih metode pengambilan:\n\n" +
+                "1. Antar ke Lokasi 🛵\n" +
+                "2. Ambil Sendiri 🚶\n\n" +
+                "Ketik angka 1 atau 2.";
+    }
+
+    // ── Step 4 [NEW]: INPUT_ALAMAT — user masukkan alamat pengiriman ──
+    private String handleInputAlamat(String input) {
+        String alamat = input.trim();
+        if (alamat.length() < 5) {
+            return "⚠️ Alamat terlalu pendek. Mohon masukkan alamat lengkap.\n" +
+                    "(Contoh: Jl. Mawar No. 5, Sleman, Yogyakarta)";
+        }
+        alamatPengiriman = alamat;
+        currentStep = Step.KONFIRMASI;
         return buildKonfirmasiMessage();
     }
 
-    // ── Step 3: KONFIRMASI — user konfirmasi pesanan ─────────────
+    // ── Step 5: KONFIRMASI — user konfirmasi pesanan ─────────────
     private String handleKonfirmasi(String input, String username) {
         String low = input.toLowerCase();
 
-        if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi","y")) {
+        if (containsAny(low, "ya", "iya", "yes", "ok", "oke", "setuju", "konfirmasi")) {
             boolean saved = saveOrder(username);
 
             if (saved) {
-                // 1. Rangkai teks struk sukses terlebih dahulu selagi variabel masih menyimpan data
+                // 1. Rangkai teks struk sukses selagi variabel masih menyimpan data
+                String infoAlamat = "Ambil Sendiri".equals(metodePengambilan)
+                        ? ""
+                        : "\n   Alamat    : " + alamatPengiriman;
                 String successMessage = String.format(
                         "✅ Pesanan berhasil dibuat!\n\n" +
                                 "📋 Detail Pesanan:\n" +
                                 "   Layanan   : %s\n" +
                                 "   Jumlah    : %.1f %s\n" +
                                 "   Total     : Rp %,.0f\n" +
+                                "   Metode    : %s%s\n" +
                                 "   Status    : Sedang Diproses 🔄\n\n" +
                                 "Anda dapat memantau status pesanan di menu 'Tracking Pesanan'.\n" +
                                 "Terima kasih! 😊",
-                        selectedLayanan, inputBerat, selectedSatuan, totalHarga
+                        selectedLayanan, inputBerat, selectedSatuan, totalHarga,
+                        metodePengambilan, infoAlamat
                 );
 
                 // 2. Setelah string berhasil dibuat, baru bersihkan data flow pemesanan
@@ -204,7 +249,7 @@ public class ChatbotController {
             }
         }
 
-        if (containsAny(low, "tidak", "no", "gak", "ngga", "batal", "wegah")) {
+        if (containsAny(low, "tidak", "no", "gak", "ngga", "batal")) {
             resetFlow();
             return "❌ Pemesanan dibatalkan. Ada yang bisa saya bantu lagi?";
         }
@@ -215,10 +260,13 @@ public class ChatbotController {
     // ── Helper: simpan order ke tabel history ───────────────────
     private boolean saveOrder(String username) {
         try {
+            // [NEW] Menyimpan metode_pengambilan & alamat sesuai desain ERD
             int rows = db.preparedExecute(
-                    "INSERT INTO history(username, nama_layanan, berat_kg, total_harga, status) " +
-                            "VALUES(?, ?, ?, ?, 'Sedang Diproses')",
-                    username, selectedLayanan, inputBerat, totalHarga
+                    "INSERT INTO history(username, nama_layanan, berat_kg, total_harga, status, metode_pengambilan, alamat) " +
+                            "VALUES(?, ?, ?, ?, 'Sedang Diproses', ?, ?)",
+                    username, selectedLayanan, inputBerat, totalHarga,
+                    metodePengambilan,
+                    (alamatPengiriman != null && !alamatPengiriman.isBlank()) ? alamatPengiriman : null
             );
             return rows > 0;
         } catch (SQLException e) {
@@ -243,30 +291,46 @@ public class ChatbotController {
         return sb.toString();
     }
 
+    // ── Helper: bangun teks metode pengambilan ──────────────────
+    private String buildMetodePengambilanMessage() {
+        return "🚗 Pilih Metode Pengambilan:\n\n" +
+                "1. Antar ke Lokasi 🛵  (min. 5 kg, radius ± 5 km)\n" +
+                "2. Ambil Sendiri 🚶\n\n" +
+                "Ketik angka 1 atau 2.\n" +
+                "Ketik 'batal' untuk membatalkan.";
+    }
+
     // ── Helper: bangun teks konfirmasi ──────────────────────────
     private String buildKonfirmasiMessage() {
+        String infoAlamat = "Ambil Sendiri".equals(metodePengambilan)
+                ? ""
+                : "\n   Alamat    : " + alamatPengiriman;
         return String.format(
                 "📋 *Ringkasan Pesanan:*\n\n" +
                         "   Layanan   : %s\n" +
                         "   Jumlah    : %.1f %s\n" +
                         "   Harga     : Rp %,.0f / %s\n" +
                         "   ───────────────────\n" +
-                        "   Total     : Rp %,.0f\n\n" +
+                        "   Total     : Rp %,.0f\n" +
+                        "   Metode    : %s%s\n\n" +
                         "Ketik 'Ya' untuk konfirmasi atau 'Tidak' untuk batal.",
                 selectedLayanan, inputBerat, selectedSatuan,
                 selectedHarga, selectedSatuan,
-                totalHarga
+                totalHarga, metodePengambilan, infoAlamat
         );
     }
 
     // ── Helper: reset state ke IDLE ─────────────────────────────
     private void resetFlow() {
-        currentStep     = Step.IDLE;
-        selectedLayanan = null;
-        selectedHarga   = 0;
-        selectedSatuan  = null;
-        inputBerat      = 0;
-        totalHarga      = 0;
+        currentStep      = Step.IDLE;
+        selectedLayanan  = null;
+        selectedHarga    = 0;
+        selectedSatuan   = null;
+        inputBerat       = 0;
+        totalHarga       = 0;
+        // [NEW] Reset metode pengambilan
+        metodePengambilan = "Ambil Sendiri";
+        alamatPengiriman  = "";
     }
 
     // ── Helper: cek keyword ─────────────────────────────────────
