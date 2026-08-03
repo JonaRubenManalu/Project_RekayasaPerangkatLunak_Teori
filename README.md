@@ -6,7 +6,7 @@ Kelompok MUGEN | Semester Genap TA 2025/2026
 
 ##  Tentang Aplikasi
 
-WashEasy Bot adalah aplikasi desktop berbasis chatbot yang kami bangun sebagai solusi digital untuk usaha laundry skala UMKM. Ide dasarnya sederhana: banyak pelanggan laundry yang bingung soal harga, waktu pengerjaan, atau layanan apa yang tersedia — biasanya mereka harus telepon dulu atau datang langsung. Nah, WashEasy Bot hadir untuk menggantikan itu semua lewat antarmuka chatbot yang bisa diakses kapan saja.
+WashEasy Bot adalah aplikasi desktop berbasis chatbot yang kami bangun sebagai solusi digital untuk usaha laundry skala UMKM. Ide dasarnya sederhana: banyak pelanggan laundry yang bingung soal harga, waktu pengerjaan, atau layanan apa yang tersedia biasanya mereka harus telepon dulu atau datang langsung. Nah, WashEasy Bot hadir untuk menggantikan itu semua lewat antarmuka chatbot yang bisa diakses kapan saja.
 
 Aplikasi ini punya dua sisi: **sisi pelanggan** yang bisa tanya-tanya lewat chatbot dan langsung pesan layanan, dan **sisi admin** yang bisa kelola data layanan dari dashboard. Semua data disimpan lokal pakai SQLite, jadi nggak perlu setup server dulu buat nyoba.
 
